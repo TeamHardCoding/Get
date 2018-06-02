@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.get.view.TableViewLayoutController">
+   <children>
+      <TableView fx:id="resultTable" prefHeight="500.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columns>
+          <TableColumn fx:id="houly" prefWidth="75.0" text="시급" />
+          <TableColumn fx:id="startDate" prefWidth="75.0" text="시작 날짜" />
+            <TableColumn fx:id="purposeDate" prefWidth="75.0" text="목표 날짜" />
+            <TableColumn fx:id="monthlyNow" prefWidth="75.0" text="월급(현재)" />
+            <TableColumn fx:id="monthly" prefWidth="75.0" text="월급(한달)" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
