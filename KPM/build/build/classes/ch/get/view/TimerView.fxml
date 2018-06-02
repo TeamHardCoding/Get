@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.get.view.TImerViewController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="40.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="40.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="40.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="65.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="65.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label fx:id="hour" alignment="CENTER" text="0" textAlignment="CENTER" GridPane.halignment="CENTER" />
+      <Label fx:id="minute" alignment="CENTER" contentDisplay="CENTER" text="00" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+      <Label fx:id="second" alignment="CENTER" contentDisplay="CENTER" text="00" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+      <TextField fx:id="startKill" promptText="시작 킬" GridPane.columnIndex="3">
+         <GridPane.margin>
+            <Insets left="1.0" right="1.0" />
+         </GridPane.margin></TextField>
+      <TextField fx:id="myPower" promptText="현투력" GridPane.columnIndex="4">
+         <GridPane.margin>
+            <Insets left="1.0" right="1.0" />
+         </GridPane.margin>
+      </TextField>
+      <Button fx:id="startBtn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#startBtnHandle" text="시작" textAlignment="CENTER" GridPane.columnIndex="5">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <GridPane.margin>
+            <Insets left="1.0" right="1.0" />
+         </GridPane.margin>
+      </Button>
+   </children>
+</GridPane>
