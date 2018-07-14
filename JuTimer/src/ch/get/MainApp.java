@@ -35,8 +35,8 @@ public class MainApp extends Application {
 	private Label sec;
 	
 	//Controller 참조
-	private RootLayoutController rootCont;
-	private BackGroundController bgCont;
+	public static RootLayoutController rootCont;
+	public static BackGroundController bgCont;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -122,9 +122,6 @@ public class MainApp extends Application {
 			//레이아웃 바인딩
 			rootLayout.heightProperty().addListener(event -> {
 				imgView.setFitHeight(rootLayout.getHeight());
-				//hour.setLayoutY(rootLayout.getLayoutX());
-				//min.setLayoutY((rootLayout.getLayoutX())+20);
-				//sec.setLayoutY((rootLayout.getLayoutX())+35);
 			});
 			
 			rootLayout.widthProperty().addListener(event -> {
