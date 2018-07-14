@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.get.view.BackGroundController">
+   <children>
+      <ImageView pickOnBounds="true">
+         <image>
+            <Image url="@../img/backGround.jpg" />
+         </image></ImageView>
+      <Label layoutX="414.0" layoutY="573.0" rotate="-60.0" text="hour" />
+      <Label layoutX="519.0" layoutY="398.0" rotate="-60.0" text="min" />
+      <Label layoutX="606.0" layoutY="251.0" rotate="-60.0" text="sec" />
+   </children>
+</AnchorPane>
