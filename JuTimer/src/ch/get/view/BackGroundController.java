@@ -5,6 +5,8 @@ import java.util.ResourceBundle;
 
 import ch.get.MainApp;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 
 public class BackGroundController implements Initializable{
 	

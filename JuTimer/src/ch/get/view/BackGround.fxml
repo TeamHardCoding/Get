@@ -4,15 +4,21 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.get.view.BackGroundController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.get.view.BackGroundController">
    <children>
-      <ImageView pickOnBounds="true">
-         <image>
-            <Image url="@../img/backGround.jpg" />
-         </image></ImageView>
-      <Label layoutX="414.0" layoutY="573.0" rotate="-60.0" text="hour" />
-      <Label layoutX="519.0" layoutY="398.0" rotate="-60.0" text="min" />
-      <Label layoutX="606.0" layoutY="251.0" rotate="-60.0" text="sec" />
+      <StackPane prefHeight="150.0" prefWidth="200.0">
+         <children>
+            <ImageView pickOnBounds="true">
+               <image>
+                  <Image url="@../img/backGround.jpg" />
+               </image>
+            </ImageView>
+            <Label text="hour" />
+            <Label text="min" />
+            <Label text="sec" />
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>

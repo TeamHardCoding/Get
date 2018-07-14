@@ -18,6 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
@@ -27,6 +28,7 @@ public class MainApp extends Application {
 	//Layout 참조
 	private BorderPane rootLayout;
 	private AnchorPane bgLayout;
+	private StackPane bgStackLayout;
 	private ImageView imgView;
 	private Label hour;
 	private Label min;
@@ -47,12 +49,6 @@ public class MainApp extends Application {
 		//Layout 배치
 		rootLayout.setCenter(bgLayout);
 		
-		//@@get bg param 
-		imgView = (ImageView) bgLayout.getChildren().get(0);
-		hour = (Label) bgLayout.getChildren().get(1);
-		min = (Label) bgLayout.getChildren().get(2);
-		sec = (Label) bgLayout.getChildren().get(3);
-
 		/*
 		Iterator<Node> itr = bgLayout.getChildren().iterator();
 		while(itr.hasNext())
@@ -60,21 +56,6 @@ public class MainApp extends Application {
 			System.out.println(itr.next());
 		}
 		*/
-		
-		imgView.setFitHeight(rootLayout.getHeight());
-		imgView.setFitWidth(rootLayout.getWidth());
-
-		//레이아웃 바인딩
-		rootLayout.heightProperty().addListener(event -> {
-			imgView.setFitHeight(rootLayout.getHeight());
-			//hour.setLayoutY(rootLayout.getLayoutX());
-			//min.setLayoutY((rootLayout.getLayoutX())+20);
-			//sec.setLayoutY((rootLayout.getLayoutX())+35);
-		});
-		
-		rootLayout.widthProperty().addListener(event -> {
-			imgView.setFitWidth(rootLayout.getWidth());
-		});
 		
 		//전체화면 리스너
 		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
@@ -126,8 +107,29 @@ public class MainApp extends Application {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("view/BackGround.fxml"));
 			bgLayout = (AnchorPane) loader.load();
-			
 			bgCont = BackGroundController.getInst();
+			
+			//@@get bg param 
+			bgStackLayout = (StackPane) bgLayout.getChildren().get(0);
+			imgView = (ImageView) bgStackLayout.getChildren().get(0);
+			hour = (Label) bgStackLayout.getChildren().get(1);
+			min = (Label) bgStackLayout.getChildren().get(2);
+			sec = (Label) bgStackLayout.getChildren().get(3);
+			
+			imgView.setFitHeight(rootLayout.getHeight());
+			imgView.setFitWidth(rootLayout.getWidth());
+
+			//레이아웃 바인딩
+			rootLayout.heightProperty().addListener(event -> {
+				imgView.setFitHeight(rootLayout.getHeight());
+				//hour.setLayoutY(rootLayout.getLayoutX());
+				//min.setLayoutY((rootLayout.getLayoutX())+20);
+				//sec.setLayoutY((rootLayout.getLayoutX())+35);
+			});
+			
+			rootLayout.widthProperty().addListener(event -> {
+				imgView.setFitWidth(rootLayout.getWidth());
+			});
 		}
 		catch(Exception e)
 		{
@@ -138,5 +140,5 @@ public class MainApp extends Application {
 	//getter
 	public Stage getPrimaryStage() {
 		return primaryStage;
-	}	
+	}
 }
