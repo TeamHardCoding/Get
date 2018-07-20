@@ -13,6 +13,8 @@ public class BackGroundController implements Initializable{
 	public static BackGroundController inst;
 	private MainApp mainApp;
 	
+	private BorderPane rootLayout;
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
@@ -28,5 +30,4 @@ public class BackGroundController implements Initializable{
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 	}
-
 }

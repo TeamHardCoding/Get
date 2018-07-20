@@ -2,6 +2,7 @@ package ch.get;
 
 import java.util.Iterator;
 
+import ch.get.model.RollingTimer;
 import ch.get.view.BackGroundController;
 import ch.get.view.RootLayoutController;
 import javafx.application.Application;
@@ -18,21 +19,30 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
+	private final double MAIN_HEIGHT = 600.0;
+	private final double MAIN_WIDTH = 800.0;
+	
 	private Stage primaryStage; //메인 stage
+	
+	//TimerInst
+	private Thread rollingTimer;
+	private Thread breakTimer;
 	
 	//Layout 참조
 	private BorderPane rootLayout;
 	private AnchorPane bgLayout;
 	private StackPane bgStackLayout;
+	private GridPane labelLayout;
 	private ImageView imgView;
-	private Label hour;
-	private Label min;
+	private Label rnd;
 	private Label sec;
+	private Label min;
 	
 	//Controller 참조
 	public static RootLayoutController rootCont;
@@ -48,14 +58,6 @@ public class MainApp extends Application {
 		
 		//Layout 배치
 		rootLayout.setCenter(bgLayout);
-		
-		/*
-		Iterator<Node> itr = bgLayout.getChildren().iterator();
-		while(itr.hasNext())
-		{
-			System.out.println(itr.next());
-		}
-		*/
 		
 		//전체화면 리스너
 		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
@@ -89,9 +91,11 @@ public class MainApp extends Application {
 			Scene scene = new Scene(rootLayout);
 			primaryStage.setScene(scene);
 			rootCont = RootLayoutController.getInst();
+			rootCont.setMainApp(this);
 			
 			primaryStage.setTitle("JIU-JITSU Timer");
 			primaryStage.setOnCloseRequest(event -> Platform.exit());
+			primaryStage.setResizable(true);
 			
 			primaryStage.show();
 		}
@@ -106,26 +110,43 @@ public class MainApp extends Application {
 		{
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("view/BackGround.fxml"));
-			bgLayout = (AnchorPane) loader.load();
+			bgLayout = (AnchorPane) loader.load(); //컨트롤러 로드
 			bgCont = BackGroundController.getInst();
+			bgCont.setMainApp(this);
 			
-			//@@get bg param 
 			bgStackLayout = (StackPane) bgLayout.getChildren().get(0);
 			imgView = (ImageView) bgStackLayout.getChildren().get(0);
-			hour = (Label) bgStackLayout.getChildren().get(1);
-			min = (Label) bgStackLayout.getChildren().get(2);
-			sec = (Label) bgStackLayout.getChildren().get(3);
+			labelLayout = (GridPane) bgStackLayout.getChildren().get(1);
+			rnd = (Label) labelLayout.getChildren().get(0);
+			sec = (Label) labelLayout.getChildren().get(1);
+			min = (Label) labelLayout.getChildren().get(2);
 			
+			/*Iterator<Node> itr = labelLayout.getChildren().iterator();
+			while(itr.hasNext())
+			{
+				System.out.println(itr.next());
+			}*/
+				
 			imgView.setFitHeight(rootLayout.getHeight());
 			imgView.setFitWidth(rootLayout.getWidth());
-
+			
 			//레이아웃 바인딩
 			rootLayout.heightProperty().addListener(event -> {
 				imgView.setFitHeight(rootLayout.getHeight());
+				
+				if(primaryStage.getHeight() <= MAIN_HEIGHT)
+				{
+					primaryStage.setHeight(MAIN_HEIGHT);
+				}
 			});
 			
 			rootLayout.widthProperty().addListener(event -> {
 				imgView.setFitWidth(rootLayout.getWidth());
+				
+				if(primaryStage.getWidth() <= MAIN_WIDTH)
+				{
+					primaryStage.setWidth(MAIN_WIDTH);
+				}
 			});
 		}
 		catch(Exception e)
@@ -134,8 +155,24 @@ public class MainApp extends Application {
 		}
 	}
 	
+	public Boolean startRollingTimer()
+	{
+		if(true)
+		{
+			rollingTimer = new Thread(new RollingTimer());
+			rollingTimer.start();
+			rollingTimer.setDaemon(true);
+		}
+		
+		return true;
+	}
+	
 	//getter
 	public Stage getPrimaryStage() {
 		return primaryStage;
+	}
+
+	public BorderPane getRootLayout() {
+		return rootLayout;
 	}
 }
