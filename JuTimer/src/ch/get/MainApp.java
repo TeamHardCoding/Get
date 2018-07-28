@@ -1,5 +1,6 @@
 package ch.get;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import ch.get.model.RollingTimer;
@@ -65,13 +66,11 @@ public class MainApp extends Application {
 			@Override
 			public void handle(KeyEvent event) {
 				// TODO Auto-generated method stub
-				if((event.getCode() == KeyCode.ENTER) && !primaryStage.isFullScreen())
+				switch(event.getCode())
 				{
-					primaryStage.setFullScreen(true);
-				}
-				else
-				{
-					primaryStage.setFullScreen(false);
+					case SPACE : setFullScreen();
+					case ENTER : startRollingTimer();
+					default : break;
 				}
 			}
 		});
@@ -94,9 +93,8 @@ public class MainApp extends Application {
 			rootCont.setMainApp(this);
 			
 			primaryStage.setTitle("JIU-JITSU Timer");
-			primaryStage.setOnCloseRequest(event -> Platform.exit());
 			primaryStage.setResizable(true);
-			
+			primaryStage.setOnCloseRequest(event -> Platform.exit());
 			primaryStage.show();
 		}
 		catch(Exception e)
@@ -120,12 +118,6 @@ public class MainApp extends Application {
 			rnd = (Label) labelLayout.getChildren().get(0);
 			sec = (Label) labelLayout.getChildren().get(1);
 			min = (Label) labelLayout.getChildren().get(2);
-			
-			/*Iterator<Node> itr = labelLayout.getChildren().iterator();
-			while(itr.hasNext())
-			{
-				System.out.println(itr.next());
-			}*/
 				
 			imgView.setFitHeight(rootLayout.getHeight());
 			imgView.setFitWidth(rootLayout.getWidth());
@@ -157,14 +149,17 @@ public class MainApp extends Application {
 	
 	public Boolean startRollingTimer()
 	{
-		if(true)
-		{
-			rollingTimer = new Thread(new RollingTimer());
-			rollingTimer.start();
-			rollingTimer.setDaemon(true);
-		}
+		rollingTimer = new Thread(new RollingTimer(rnd, min, sec));
+		rollingTimer.setName("RollingTimer");
+		rollingTimer.setDaemon(true);
+		rollingTimer.start();
 		
 		return true;
+	}
+	
+	public void setFullScreen()
+	{
+		primaryStage.setFullScreen(true);
 	}
 	
 	//getter
