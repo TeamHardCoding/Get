@@ -3,6 +3,7 @@ package ch.get;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import ch.get.model.BreakTimer;
 import ch.get.model.RollingTimer;
 import ch.get.view.BackGroundController;
 import ch.get.view.RootLayoutController;
@@ -32,8 +33,8 @@ public class MainApp extends Application {
 	private Stage primaryStage; //메인 stage
 	
 	//TimerInst
-	private Thread rollingTimer;
-	private Thread breakTimer;
+	private static RollingTimer rollingTimer = RollingTimer.getInst();
+	private BreakTimer breakTimer;
 	
 	//Layout 참조
 	private BorderPane rootLayout;
@@ -68,8 +69,8 @@ public class MainApp extends Application {
 				// TODO Auto-generated method stub
 				switch(event.getCode())
 				{
-					case SPACE : setFullScreen();
-					case ENTER : startRollingTimer();
+					case SPACE : setFullScreen(); break;
+					case ENTER : startRollingTimer(); break;
 					default : break;
 				}
 			}
@@ -147,14 +148,22 @@ public class MainApp extends Application {
 		}
 	}
 	
-	public Boolean startRollingTimer()
+	public void startRollingTimer()
 	{
-		rollingTimer = new Thread(new RollingTimer(rnd, min, sec));
-		rollingTimer.setName("RollingTimer");
-		rollingTimer.setDaemon(true);
-		rollingTimer.start();
+		//rollingTimer = RollingTimer.getInst();
 		
-		return true;
+		if(rollingTimer.getFlag())
+		{
+			rollingTimer.setFlag(false);
+		}
+		else
+		{			
+			rollingTimer.setResource(rnd, min, sec);
+			rollingTimer.setFlag(true);
+			rollingTimer.setName("rolling");
+			rollingTimer.setDaemon(true);	
+			rollingTimer.start();
+		}
 	}
 	
 	public void setFullScreen()
