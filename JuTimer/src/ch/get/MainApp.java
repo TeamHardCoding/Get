@@ -1,23 +1,16 @@
 package ch.get;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import ch.get.model.BreakTimer;
 import ch.get.model.RollingTimer;
 import ch.get.view.BackGroundController;
 import ch.get.view.RootLayoutController;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -33,8 +26,10 @@ public class MainApp extends Application {
 	private Stage primaryStage; //메인 stage
 	
 	//TimerInst
-	private static RollingTimer rollingTimer = RollingTimer.getInst();
-	private BreakTimer breakTimer;
+	private static Thread threadR;
+	private static Thread threadB;
+	private static RollingTimer rollingTimer;
+	private static BreakTimer breakTimer;
 	
 	//Layout 참조
 	private BorderPane rootLayout;
@@ -150,19 +145,17 @@ public class MainApp extends Application {
 	
 	public void startRollingTimer()
 	{
-		//rollingTimer = RollingTimer.getInst();
-		
-		if(rollingTimer.getFlag())
+		if(rollingTimer == null)
 		{
-			rollingTimer.setFlag(false);
+			rollingTimer = RollingTimer.getInst();
+			//rollingTimer.setResource(rnd, min, sec);
+			threadR = new Thread(rollingTimer);
+			threadR.setDaemon(true);
+			threadR.start();
 		}
 		else
-		{			
-			rollingTimer.setResource(rnd, min, sec);
-			rollingTimer.setFlag(true);
-			rollingTimer.setName("rolling");
-			rollingTimer.setDaemon(true);	
-			rollingTimer.start();
+		{
+			
 		}
 	}
 	
