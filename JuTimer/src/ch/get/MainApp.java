@@ -1,7 +1,6 @@
 package ch.get;
 
-import ch.get.model.BreakTimer;
-import ch.get.model.RollingTimer;
+import ch.get.model.TimerChange;
 import ch.get.view.BackGroundController;
 import ch.get.view.RootLayoutController;
 import javafx.application.Application;
@@ -26,10 +25,7 @@ public class MainApp extends Application {
 	private Stage primaryStage; //메인 stage
 	
 	//TimerInst
-	private static Thread threadR;
-	private static Thread threadB;
-	private static RollingTimer rollingTimer;
-	private static BreakTimer breakTimer;
+	private static TimerChange tc;
 	
 	//Layout 참조
 	private BorderPane rootLayout;
@@ -48,6 +44,8 @@ public class MainApp extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
+		
+		//initInst
 		
 		//Layout init
 		initRootLayout();
@@ -145,13 +143,9 @@ public class MainApp extends Application {
 	
 	public void startRollingTimer()
 	{
-		if(rollingTimer == null)
+		if(tc == null)
 		{
-			rollingTimer = RollingTimer.getInst();
-			//rollingTimer.setResource(rnd, min, sec);
-			threadR = new Thread(rollingTimer);
-			threadR.setDaemon(true);
-			threadR.start();
+			tc = TimerChange.getInst(rnd, min, sec);
 		}
 		else
 		{

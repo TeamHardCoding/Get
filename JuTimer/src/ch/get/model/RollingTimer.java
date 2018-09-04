@@ -16,25 +16,12 @@ public class RollingTimer implements Runnable{
 	//@@Singleton
 	public static RollingTimer getInst()
 	{
-		synchronized(RollingTimer.class)
-		{
+		synchronized(RollingTimer.class) {
 			if(rt == null) { rt = new RollingTimer(); }	
 		}
 		
 		return rt;	
 	}
-	
-	/*
-	public void setResource(Label rnd, Label min, Label sec) {
-		// TODO Auto-generated constructor stub
-		this.rnd = rnd;
-		this.min = min;
-		this.sec = sec;
-		
-		timeSec = new Integer(0);
-		timeMin = new Integer(0);
-		timeRnd = new Integer(0);
-	}*/
 	
 	@Override
 	public void run() {

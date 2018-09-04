@@ -31,17 +31,7 @@ public class BreakTimer implements Runnable{
 				public void run() {
 					// TODO Auto-generated method stub
 				}
-			});
-			
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch(InterruptedException e)
-			{
-				System.out.println("InterruptedException");
-				break;
-			}
+			});	
 		}
 	}
 
