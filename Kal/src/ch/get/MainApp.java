@@ -1,5 +1,7 @@
 package ch.get;
 
+import java.time.LocalDate;
+
 import ch.get.model.Result;
 import ch.get.view.RootLayoutController;
 import ch.get.view.SubmitLayoutController;
@@ -36,6 +38,7 @@ public class MainApp extends Application {
 	
 	public MainApp() {
 		// TODO Auto-generated constructor stub
+		
 	}
 	
 	/*
