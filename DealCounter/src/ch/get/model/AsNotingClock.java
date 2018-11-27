@@ -2,11 +2,16 @@ package ch.get.model;
 
 import java.time.LocalTime;
 
-public class AsNotingClock implements Runnable {
+import ch.get.view.RootLController;
+import javafx.application.Platform;
+
+public class AsNotingClock<T> implements Runnable {
 	
 	private static AsNotingClock inst = null;
 	private LocalTime time;
 	public boolean active;
+
+	private T tmp;
 	
 	public static AsNotingClock getInstance()
 	{
@@ -34,15 +39,12 @@ public class AsNotingClock implements Runnable {
 		{
 			try {
 				Thread.sleep(1000);
-				
+				time = LocalTime.now();
+				RootLController.getInst().tikTok(time.getSecond());
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public LocalTime getTime() {
-		return time;
 	}
 }
