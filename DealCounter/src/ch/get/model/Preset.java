@@ -13,7 +13,6 @@ public class Preset {
 	private StringProperty name;
 	private IntegerProperty time;
 	private Color color;
-	//Home
 	
 	private StringBuffer sb;
 	

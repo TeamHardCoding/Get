@@ -41,7 +41,10 @@ public class SettingLController implements Initializable {
 		timeColumn.setCellValueFactory(cellData -> cellData.getValue().timeProperty().asObject());
 		
 		presetTable.setRowFactory(row -> new TableRow<Preset>() {
-			
+			@Override
+			protected void updateItem(Preset item, boolean empty) {
+				super.updateItem(item, empty);
+			}
 		});
 	}
 
