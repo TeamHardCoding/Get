@@ -25,7 +25,7 @@ public class Start extends Application {
 	RootController root_Cont;
 	
 	//util
-	//Type_Change<?> change; 
+	//Type_Change<?> change;
 	
 	@Override
 	public void start(Stage primaryStage) {
