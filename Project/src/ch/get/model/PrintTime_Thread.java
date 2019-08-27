@@ -21,9 +21,9 @@ public class PrintTime_Thread implements Runnable {
 		
 		try {
 			while(!Thread.currentThread().isInterrupted()) {
-					Thread.currentThread().sleep(1000);
 					ldt = LocalDateTime.now();
 					textArea.appendText(ldt.toString()+"\n");
+					Thread.currentThread().sleep(1000);
 			}
 		} catch (Exception e) {
 			
