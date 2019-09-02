@@ -20,7 +20,7 @@ public class RootLayoutController implements Initializable{
 	@FXML TextArea textArea;
 	private LocalDateTime ldt;
 	private Task<Void> task;
-	private ServerModel server;
+	private Thread server;
 	
 	public RootLayoutController() {
 		// TODO Auto-generated constructor stub
@@ -34,8 +34,9 @@ public class RootLayoutController implements Initializable{
 	}
 	
 	public void start_Server() {
-		
-		server = new ServerModel(textArea);
+		server = new Thread(new ServerModel(textArea));
+		server.setDaemon(true);
+		server.start();
 	}
 	
 	public void show_Time() {
