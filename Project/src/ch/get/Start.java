@@ -24,9 +24,6 @@ public class Start extends Application {
 	//컨트롤러 객체
 	RootController root_Cont;
 	
-	//util
-	//Type_Change<?> change;
-	
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;

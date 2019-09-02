@@ -1,5 +1,9 @@
 package com.ch.get.model;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -24,13 +28,26 @@ public class ServerModel implements Runnable{
 			textArea.appendText("서버 세팅중...\n");
 			while(true) {
 				
-				for(int i=3; i>=1; i--) {
-					textArea.appendText(i+"\n");
-					Thread.sleep(1000);
-				}
-				
 				textArea.appendText("클라이언트 접속 대기중...\n");
 				Socket socket = serverSocket.accept();
+				
+				BufferedReader br = new BufferedReader(
+						new InputStreamReader(
+								socket.getInputStream()));
+				
+				BufferedWriter bw = new BufferedWriter(
+						new OutputStreamWriter(
+								socket.getOutputStream()));
+				
+				String msg = br.readLine();
+				textArea.appendText(msg+"\n");
+				
+				msg = "Server 수신";
+				bw.write(msg);
+				bw.newLine();
+				bw.flush();
+				
+				socket.close();
 			}
 		} catch (Exception e) {
 			
