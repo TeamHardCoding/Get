@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -26,27 +27,31 @@ public class ServerModel implements Runnable{
 		try {
 			serverSocket = new ServerSocket(8000);
 			textArea.appendText("서버 세팅중...\n");
+			Thread.currentThread().sleep(1000);
+			textArea.appendText("클라이언트 접속 대기중...\n");
+			
 			while(true) {
 				
-				textArea.appendText("클라이언트 접속 대기중...\n");
 				Socket socket = serverSocket.accept();
 				
 				BufferedReader br = new BufferedReader(
 						new InputStreamReader(
 								socket.getInputStream()));
 				
-				BufferedWriter bw = new BufferedWriter(
-						new OutputStreamWriter(
-								socket.getOutputStream()));
+//				BufferedWriter bw = new BufferedWriter(
+//						new OutputStreamWriter(
+//								socket.getOutputStream()));
 				
 				String msg = br.readLine();
-				textArea.appendText(msg+"\n");
+				InetAddress name = socket.getInetAddress();
+//				textArea.appendText(msg+"\n"+name.getHostName());
+				textArea.appendText(name.getHostAddress()+" : "+name.getHostName()+"\n");
 				
 				msg = "Server 수신";
-				bw.write(msg);
-				bw.newLine();
-				bw.flush();
-				
+//				bw.write(msg);
+//				bw.newLine();
+//				bw.flush();
+//				
 				socket.close();
 			}
 		} catch (Exception e) {
