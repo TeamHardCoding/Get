@@ -11,6 +11,9 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
@@ -37,10 +40,31 @@ public class RootLayoutController implements Initializable{
 	
 	public void start_Server() {
 		
-		
+		if(server == null) {
 			server = new Thread(new ServerModel(textArea));
 			server.setDaemon(true);
 			server.start();
+		} else {
+			Alert alert = new Alert( AlertType.CONFIRMATION);
+			alert.setTitle("서버 구동 거부");
+			alert.setHeaderText("다중 서버 구동 불가");
+			alert.setContentText("이미 서버가 구동중 입니다.\n서버를 재시작 하시겠습니까?");
+			alert.showAndWait();
+			
+			if(alert.getResult() == ButtonType.OK) {
+				int sec = 0;
+				try {
+					
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				
+			}
+		}
+			
 	}
 	
 	public void show_Time() {
