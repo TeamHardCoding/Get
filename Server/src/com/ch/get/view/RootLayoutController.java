@@ -12,12 +12,14 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 
 public class RootLayoutController implements Initializable{
 
 	@FXML Label time_Label;
 	@FXML TextArea textArea;
+	@FXML TabPane tabPane;
 	private LocalDateTime ldt;
 	private Task<Void> task;
 	private Thread server;
@@ -34,9 +36,11 @@ public class RootLayoutController implements Initializable{
 	}
 	
 	public void start_Server() {
-		server = new Thread(new ServerModel(textArea));
-		server.setDaemon(true);
-		server.start();
+		
+		
+			server = new Thread(new ServerModel(textArea));
+			server.setDaemon(true);
+			server.start();
 	}
 	
 	public void show_Time() {

@@ -48,7 +48,7 @@ public class Start extends Application {
 				Stage stage = new Stage();
 				stage.setScene(scene);
 				stage.setResizable(false);
-				stage.setTitle("Shin");
+//				stage.setTitle("Shin");
 				stage.initStyle(StageStyle.UTILITY);
 				stage.initOwner(primaryStage);
 				stage.show();
@@ -82,7 +82,7 @@ public class Start extends Application {
 			Scene scene = new Scene(root_Layout);
 			
 			primaryStage.setScene(scene);
-			primaryStage.setTitle("PROJECT BY Shin");
+			primaryStage.setTitle("Client");
 			primaryStage.setResizable(false);
 			
 			primaryStage.show();

@@ -7,6 +7,8 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import javafx.scene.control.TextArea;
 
@@ -14,6 +16,7 @@ public class ServerModel implements Runnable{
 	
 	private TextArea textArea;
 	private ServerSocket serverSocket;
+	private LocalTime time;
 	
 	public ServerModel() {}
 	
@@ -27,7 +30,7 @@ public class ServerModel implements Runnable{
 		try {
 			serverSocket = new ServerSocket(8000);
 			textArea.appendText("서버 세팅중...\n");
-			Thread.currentThread().sleep(1000);
+			Thread.sleep(1000);
 			textArea.appendText("클라이언트 접속 대기중...\n");
 			
 			while(true) {
@@ -38,19 +41,21 @@ public class ServerModel implements Runnable{
 						new InputStreamReader(
 								socket.getInputStream()));
 				
-//				BufferedWriter bw = new BufferedWriter(
-//						new OutputStreamWriter(
-//								socket.getOutputStream()));
+				BufferedWriter bw = new BufferedWriter(
+						new OutputStreamWriter(
+								socket.getOutputStream()));
 				
 				String msg = br.readLine();
 				InetAddress name = socket.getInetAddress();
 //				textArea.appendText(msg+"\n"+name.getHostName());
 				textArea.appendText(name.getHostAddress()+" : "+name.getHostName()+"\n");
 				
-				msg = "Server 수신";
-//				bw.write(msg);
-//				bw.newLine();
-//				bw.flush();
+				time = LocalTime.now();
+				msg = "Hi "+name.getHostName()+" "+time.toString();
+				
+				bw.write(msg);
+				bw.newLine();
+				bw.flush();
 //				
 				socket.close();
 			}

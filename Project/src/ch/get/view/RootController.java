@@ -41,9 +41,6 @@ public class RootController implements Initializable {
 	
 	@FXML
 	private void ac_StartThread() {
-		startThread.setDisable(true);
-		interrupt.setDisable(false);
-
 		clientThread = new Thread(new Client(textBox));
 		clientThread.setDaemon(true);
 		clientThread.start();
@@ -51,9 +48,6 @@ public class RootController implements Initializable {
 	
 	@FXML
 	private void ac_Interrupt() {
-		startThread.setDisable(false);
-		interrupt.setDisable(true);
-		
 		clientThread.interrupt();
 	}
 	
