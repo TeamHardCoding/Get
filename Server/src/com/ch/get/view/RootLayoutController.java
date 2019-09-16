@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+import com.ch.get.ServerStart;
 import com.ch.get.model.Count;
 import com.ch.get.model.CustomAlert;
-import com.ch.get.model.ServerModel;
+import com.ch.get.model.ServerInit;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -32,37 +32,18 @@ public class RootLayoutController implements Initializable{
 	
 	private LocalDateTime ldt;
 	private Task<Void> task;
-	private ServerModel server;
+	private ServerInit server;
+	private ServerStart mainApp;
 	
 	public RootLayoutController() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
-		this.rlc = this;
+		RootLayoutController.rlc = this;
 		//initTime
 		show_Time();
-	}
-	
-	@FXML
-	private void start_Server() {
-		
-		if(server == null) {
-			swTabComp();
-			server_Start();
-		} 
-	}
-	
-	@FXML
-	private void stop_Server() {
-		
-		if(server != null) {
-			swTabComp();
-			server_Stop();	
-			server = null;
-		}
 	}
 	
 	private void show_Time() {
@@ -89,23 +70,45 @@ public class RootLayoutController implements Initializable{
 	}
 	
 	@FXML
+	private void start_Server() { //handle line127
+		
+		if(server == null) {
+			swTabComp();
+			server_Start();
+		} 
+	}
+	
+	@FXML
+	private void stop_Server() { //handle line126
+		
+		if(server != null) {
+			swTabComp();
+			server_Stop();	
+			server = null;
+		}
+	}
+	
+	@FXML
 	private void program_Exit() {
 		
 		String title;
 		String con;
 		
 		if(server == null) {
-			exit_Now();
+			mainApp.exit_Now();
 		} else {
 			title = "서버 강제 종료";
 			con = "서버가 아직 구동중 입니다. 그래도 종료 하시겠습니까?";
 			
 			ButtonType type = new CustomAlert(AlertType.WARNING, con, title).button_Result();
-			if(type.equals(ButtonType.OK)) {
-				
-				Thread stop = new Thread(new Count(5, textArea));
-				stop.setDaemon(true);
-				stop.start();
+			if(type != null) {
+				if(type.equals(ButtonType.OK)) {
+					//count class 안에 종료 메소드 호출
+					server.closeServer();
+					Thread stop = new Thread(new Count(5, textArea, mainApp));
+					stop.setDaemon(true);
+					stop.start();
+				}
 			}
 		}			
 	}
@@ -122,14 +125,15 @@ public class RootLayoutController implements Initializable{
 		}
 	}
 	
-	private void server_Stop() { server.closeServer(); }
-	private void server_Start() {
-		
-		server = new ServerModel(textArea);
-		Thread th = new Thread( server );
-		th.setDaemon(true);
-		th.start();	
+	//handler
+	public void server_Exit() { program_Exit(); } // 완전 종료
+	public void server_Stop() { server.closeServer(); } // 서버만 종료
+	public void server_Start() { // 서버만 생성
+		server = new ServerInit(textArea);
+		server.start();
 	}
 	
-	public void exit_Now() { Platform.exit(); }
+	public void setMainApp(ServerStart mainApp) {
+		this.mainApp = mainApp;
+	}
 }

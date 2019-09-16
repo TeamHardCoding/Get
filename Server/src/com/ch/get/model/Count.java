@@ -1,5 +1,6 @@
 package com.ch.get.model;
 
+import com.ch.get.ServerStart;
 import com.ch.get.view.RootLayoutController;
 
 import javafx.scene.control.TextArea;
@@ -8,10 +9,12 @@ public class Count implements Runnable{
 
 	private int value;
 	private TextArea textArea;
+	private ServerStart mainApp;
 	
-	public Count(int val, TextArea textArea) {
+	public Count(int val, TextArea textArea, ServerStart mainApp) {
 		this.value = val;
 		this.textArea = textArea;
+		this.mainApp = mainApp;
 	}
 	
 	@Override
@@ -23,12 +26,16 @@ public class Count implements Runnable{
 				value--;
 				
 				if(value == 0) {
-					RootLayoutController.rlc.exit_Now();
+					mainApp.exit_Now();
 					break;
 				}
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+	}
+	
+	public void setMainApp(ServerStart mainApp) {
+		this.mainApp = mainApp;
 	}
 }

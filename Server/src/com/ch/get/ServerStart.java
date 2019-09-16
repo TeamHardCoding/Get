@@ -3,17 +3,19 @@ package com.ch.get;
 import com.ch.get.view.RootLayoutController;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class ServerStart extends Application {
 
 	private Stage primaryStage;
 	
 	private BorderPane rootPane;
-	private RootLayoutController rCont;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -35,6 +37,18 @@ public class ServerStart extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Server");
 			primaryStage.setResizable(false);
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				
+				@Override
+				public void handle(WindowEvent event) {
+					// TODO Auto-generated method stub
+					if(event.getEventType().equals(WindowEvent.WINDOW_CLOSE_REQUEST)) {
+						RootLayoutController.rlc.server_Exit();
+					}
+				}
+			});
+			
+			RootLayoutController.rlc.setMainApp(this);
 			primaryStage.show();
 		
 		} catch (Exception e) {
@@ -42,6 +56,10 @@ public class ServerStart extends Application {
 		}
 	}
 	
+	public void exit_Now() 
+	{
+		Platform.exit(); 
+	}
 	public static void main(String[] args) {
 		launch(args);
 	}

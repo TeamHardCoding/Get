@@ -5,80 +5,94 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 import javafx.scene.control.TextArea;
 
-public class ServerModel implements Runnable{
+public class ServerModel extends Thread{
 	
+	private final UUID uuid;
+	private HashMap<String, List<Object>> user;
+	private List<Object> clientStream;
+	private Socket socket;
 	private TextArea textArea;
-	private ServerSocket serverSocket;
 	private LocalTime time;
-	private BufferedReader br;
+	
+	private BufferedReader br; //문자 스트림
 	private BufferedWriter bw;
-	private Object lock = new Object();
+	
 	private boolean ready = true;
+	private Object lock;
 	
 	//public ServerModel() {}
 	
-	public ServerModel(TextArea textArea) {
+	public ServerModel(TextArea textArea, Socket socket, HashMap<String, List<Object>> user, Object lock) {
+		uuid = UUID.randomUUID();
 		this.textArea = textArea;
-	}
-
-	
-	public void closeServer() {
+		this.socket = socket;
+		this.user = user;
+		this.lock = lock;
+		
+		//Stream 생성
+		clientStream = new ArrayList<Object>();
+		clientStream.clear();
+		
 		try {
-			synchronized (lock) {
-				serverSocket.close();
-			}
+			bw = new BufferedWriter(
+					new OutputStreamWriter(
+							socket.getOutputStream()));
+			
+			br = new BufferedReader(
+					new InputStreamReader(
+							socket.getInputStream()));
+			
+			clientStream.add(bw);
+			clientStream.add(br);
 		} catch (Exception e) {
-			// TODO: handle exception
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			user.put(uuid.toString(), clientStream);
 		}
 	}
 
 	@Override
 	public void run() {
-		
 		try {
-			serverSocket = new ServerSocket(8000);
-			textArea.appendText("서버 세팅중...\n");		
-			Thread.sleep(500);
-			textArea.appendText("클라이언트 접속 대기중...\n");
-			
-			while(ready) {
-				Socket socket = serverSocket.accept();
+			synchronized (lock) {
+				String msg = br.readLine();
+				InetAddress name = socket.getInetAddress();
+				textArea.appendText(name.getHostAddress()+" : "+name.getHostName()+"\n");
+				textArea.appendText(user.size()+"\n"+clientStream.get(0)+"\n");
 				
-				synchronized (lock) {
-					br = new BufferedReader(
-							new InputStreamReader(
-									socket.getInputStream()));
-					
-					bw = new BufferedWriter(
-							new OutputStreamWriter(
-									socket.getOutputStream()));
-					
-					String msg = br.readLine();
-					InetAddress name = socket.getInetAddress();
-					textArea.appendText(name.getHostAddress()+" : "+name.getHostName()+"\n");
-					
-					time = LocalTime.now();
-					msg = "Hi "+name.getHostName()+" "+time.toString();
-					
-					bw.write(msg);
-					bw.newLine();
-					bw.flush();
-	//				
-					socket.close();
-				}
+				time = LocalTime.now();
+				msg = "Hi "+name.getHostName()+" "+time.toString();
+				
+				bw.write(msg);
+				bw.newLine();
+				bw.flush();
 			}
 		} catch (Exception e) {
-			textArea.appendText("서버 종료\n");
+			textArea.appendText(socket.getInetAddress()+" 클라이언트 종료\n");
 		}
 	}
 	
-	public void setTextArea(TextArea textArea) {
-		this.textArea = textArea;
+	//getter
+	public Socket getSocket() {
+		return socket;
+	}
+	public String getUuid() {
+		return uuid.toString();
+	}
+	public BufferedWriter getBw() {
+		return bw;
+	}
+	public BufferedReader getBr() {
+		return br;
 	}
 }
