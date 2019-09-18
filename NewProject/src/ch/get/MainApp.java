@@ -2,12 +2,15 @@ package ch.get;
 
 import java.io.IOException;
 
+import ch.get.model.ServerHandler;
 import ch.get.view.RootLayoutController;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class MainApp extends Application {
 
@@ -38,6 +41,13 @@ public class MainApp extends Application {
 			primaryStage.setTitle("1차 프로젝트");
 			primaryStage.setAlwaysOnTop(false);
 			primaryStage.setResizable(false);
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				
+				@Override
+				public void handle(WindowEvent event) {
+					RootLayoutController.rcl.stopServer();
+				}
+			});
 			primaryStage.show();
 			
 			RootLayoutController.rcl.setMainApp(mainApp);

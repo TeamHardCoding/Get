@@ -24,6 +24,9 @@ public class RootLayoutController implements Initializable {
 		rcl = this;
 	}
 	
+	public void printText(String msg) {
+		textArea.appendText(msg+"\n");
+	}
 	/*
 	 * Handler
 	 */
@@ -31,15 +34,19 @@ public class RootLayoutController implements Initializable {
 	private void startServer() {
 		if(!ServerHandler.getInst().isAlive())
 		{
-			ServerHandler.getInst().setTextArea(textArea);
 			ServerHandler.getInst().start();
 		} else {
+			
 			new ShowAlertWindow(AlertType.WARNING, "서버 구동 오류", "이미 서버가 실행중 입니다.");
 		}
 	}
+	
 	public void stopServer() {
 		if(ServerHandler.getInst().isAlive()) {
-			ServerHandler.getInst().interrupt();
+			ServerHandler.getInst().stopServerSocket();
+			printText("사용자 서버 종료");
+		} else {
+			Platform.exit();
 		}
 	}
 	@FXML

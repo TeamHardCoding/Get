@@ -9,43 +9,76 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
+import ch.get.view.RootLayoutController;
+
 public class Server extends Thread {
 	
 	private Socket socket;
 	private String clientID;
+	private Object lock;
 	
 	//request stream
 	private BufferedReader br;
 	private PrintWriter pw;
 	
-	public Server(Socket socket) {
+	public Server(Socket socket, Object lock) {
 		this.socket = socket;
-	}
-	
-	@Override
-	public void run() {
+		this.lock = lock;
+		
 		try {
 			br = new BufferedReader(
-						new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-			
+					new InputStreamReader(
+							socket.getInputStream(), 
+							StandardCharsets.UTF_8));
+		
 			pw = new PrintWriter(
 						new BufferedWriter(
-								new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8)));
-			
-			while(true) {
-				String request = br.readLine();
-				String clientIP = socket.getRemoteSocketAddress().toString();
-				
-				if(request == null) {
-					ServerHandler.getInst().printText(clientIP+" Å¬¶óÀÌ¾ðÆ® Á¢¼Ó ²÷±è");
-					break;
-				} 
-			}
+								new OutputStreamWriter(
+										socket.getOutputStream(), 
+										StandardCharsets.UTF_8)));
+		
 		} catch (IOException e) {
 		} catch (Exception e) {
 		}
 	}
 	
+	@Override
+	public void run() {
+		
+		synchronized (lock) {
+			try {
+				while(true) {
+					String request = br.readLine();
+					String clientIP = socket.getRemoteSocketAddress().toString();
+					
+					if(request == null) {
+						RootLayoutController.rcl.printText(clientIP+" Å¬¶óÀÌ¾ðÆ® Á¢¼Ó ²÷±è");
+						break;
+					} 
+				}
+			} catch (IOException e) {
+			} catch (Exception e) {
+			}
+		}
+	}
+	
+	/**************************************************/
+	//ETC
+	public void closeStream() {
+		try {
+			br.close();
+			pw.flush();
+			pw.close();
+			socket.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	/**************************************************/
+	
+	/*
+	 * getter/setter
+	 */
 	public String getClientID() {
 		return clientID;
 	}
