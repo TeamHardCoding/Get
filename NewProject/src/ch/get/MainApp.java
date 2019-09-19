@@ -2,7 +2,6 @@ package ch.get;
 
 import java.io.IOException;
 
-import ch.get.model.ServerHandler;
 import ch.get.view.RootLayoutController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -16,7 +15,6 @@ public class MainApp extends Application {
 
 	private Stage primaryStage;
 	private MainApp mainApp;
-	
 	private BorderPane rootLayout;
 	
 	@Override

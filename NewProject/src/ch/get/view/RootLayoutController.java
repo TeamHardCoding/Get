@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 
 public class RootLayoutController implements Initializable {
@@ -32,21 +33,23 @@ public class RootLayoutController implements Initializable {
 	 */
 	@FXML
 	private void startServer() {
-		if(!ServerHandler.getInst().isAlive())
+		if(ServerHandler.getInst().getServerInstance() == null)
 		{
-			ServerHandler.getInst().start();
+			ServerHandler.getInst().initServer();
 		} else {
-			
 			new ShowAlertWindow(AlertType.WARNING, "서버 구동 오류", "이미 서버가 실행중 입니다.");
 		}
 	}
 	
 	public void stopServer() {
-		if(ServerHandler.getInst().isAlive()) {
-			ServerHandler.getInst().stopServerSocket();
-			printText("사용자 서버 종료");
-		} else {
-			Platform.exit();
+		if(ServerHandler.getInst().getServerInstance() != null) {
+			ButtonType btType = 
+					new ShowAlertWindow(AlertType.WARNING, "서버 구동 오류", "이미 서버가 실행중 입니다 그래도 종료 하시겠습니까?")
+					.getButtonResult();
+			
+			if(btType == ButtonType.OK) {
+				ServerHandler.getInst().stopServerSocket();
+			}
 		}
 	}
 	@FXML
@@ -54,6 +57,7 @@ public class RootLayoutController implements Initializable {
 		new ShowAlertWindow(AlertType.INFORMATION, "1차 프로젝트", "Made By Shin");
 	}
 	public void exitProgramHandler() {
+		stopServer();
 		Platform.exit();
 	}
 	/*
