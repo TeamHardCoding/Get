@@ -36,7 +36,6 @@ public class Server extends Thread {
 								new OutputStreamWriter(
 										socket.getOutputStream(), 
 										StandardCharsets.UTF_8)));
-		
 		} catch (IOException e) {
 		} catch (Exception e) {
 		}

@@ -52,6 +52,11 @@ public class RootLayoutController implements Initializable {
 			}
 		}
 	}
+	
+	@FXML
+	private void showClientProgramHandler() {
+		mainApp.initClient();
+	}
 	@FXML
 	private void showProgramHandler() {
 		new ShowAlertWindow(AlertType.INFORMATION, "1차 프로젝트", "Made By Shin");

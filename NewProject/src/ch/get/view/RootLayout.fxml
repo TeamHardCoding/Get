@@ -43,6 +43,7 @@
                   <Button mnemonicParsing="false" onAction="#showProgramHandler" text="Info" />
                   <Button mnemonicParsing="false" onAction="#startServer" text="ServerStart" />
                   <Button mnemonicParsing="false" onAction="#stopServer" text="ServerStop" />
+                  <Button mnemonicParsing="false" onAction="#showClientProgramHandler" text="StartClient" />
                </children>
             </HBox>
          </items>

@@ -7,10 +7,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
-import java.util.Set;
 
 import ch.get.view.RootLayoutController;
-import javafx.scene.control.TextArea;
 
 public class ServerHandler {
 		
@@ -33,25 +31,25 @@ public class ServerHandler {
 			@Override
 			public void run() {
 				try {
-					userThreadLists = new HashMap<String, Server>();
-					userThreadLists.clear();
+					userThreadLists = new HashMap<String, Server>(); //클라이언트 소켓 제어를 위해 선언
+					userThreadLists.clear(); //기본 값 셋팅
 					
 					serverSocket = new ServerSocket(); //서버소켓 생성
-					serverIp = InetAddress.getLocalHost().getHostAddress();
-					serverSocket.bind(new InetSocketAddress(serverIp, PORT));
-					RootLayoutController.rcl.printText("서버 접속 대기중...");
+					serverIp = InetAddress.getLocalHost().getHostAddress(); //현재 실행중인 PC의 IP 받아옴
+					serverSocket.bind(new InetSocketAddress(serverIp, PORT)); //서버 IP랑 PORT 바인드
+					RootLayoutController.rcl.printText("서버 접속 대기중..."); //메시지 출력
 					
 					while(true) {
-						Socket socket = serverSocket.accept();
-						Server server = new Server(socket, lock);
+						Socket socket = serverSocket.accept(); // 클라이언트가 접속 할때까지 기다림
+						Server server = new Server(socket, lock); // 클라이언트가 접속 하면 소켓 을 생성해서 유저개인별 쓰레드에 넘김
 						userThreadLists.put(server.getClientID(), server); //소켓 생성
 					}
 				} catch (UnknownHostException e) {
 				} catch (Exception e) {
 				} finally {
-					if(serverSocket != null && !serverSocket.isClosed()) {
+					if(serverSocket != null && !serverSocket.isClosed()) { //만에하나 문제가 생긴다면 서버 소켓 종료
 						try {
-							serverSocket.close();
+							serverSocket.close(); // 서버소켓 종료
 							RootLayoutController.rcl.printText("소켓 없음 서버 종료");
 						} catch (IOException e) {
 							e.printStackTrace();
