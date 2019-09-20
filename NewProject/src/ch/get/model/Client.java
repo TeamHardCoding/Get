@@ -41,7 +41,7 @@ public class Client{
 									socket.getOutputStream(),
 									StandardCharsets.UTF_8)),
 									true); // AutoFlush
-			pw.print(Inet4Address.getLocalHost()+" 접속 요청");
+			pw.write(Inet4Address.getLocalHost()+" 접속 요청");
 			
 			 //클라이언트 실행
 			cont = ClientLayoutController.cliContInstance;
@@ -77,10 +77,13 @@ public class Client{
 					br = new BufferedReader( //메시지 받낭.
 							new InputStreamReader(socket.getInputStream()));	
 					while(true) {
-						if(msg != null) {
-							msg = br.readLine();
-							cont.inputDataListView(msg);
-						}		
+						msg = br.readLine();
+						cont.inputDataListView(msg);
+						
+						if(msg == null) {
+							cont.inputDataListView("서버 연결 끊김...");
+							break;
+						}
 					}
 				} catch (IOException e) {
 				} catch (Exception e) {

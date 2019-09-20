@@ -59,7 +59,7 @@ public class Server extends Thread {
 					}
 					
 					RootLayoutController.rcl.printText(request);
-					pw.print("-> 서버 에서 보낸 메시지 입니다. 성공적인 접속.");
+					pw.write("-> 서버 에서 보낸 메시지 입니다. 성공적인 접속.");
 				}
 			} catch (IOException e) {
 			} catch (Exception e) {
