@@ -46,10 +46,13 @@ public class Client{
 			 //클라이언트 실행
 			cont = ClientLayoutController.cliContInstance;
 			new StartClientProcessor(socket).start();
+			cont.inputDataListView("클라이언트 서버 접속 완료!");
 		} catch (UnknownHostException e) {
 			new ShowAlertWindow(AlertType.INFORMATION, "서버를 찾을수 없습니다.", "IP나 PORT가 잘못 되었습니다.");
 		} catch (IOException e) {
+			new ShowAlertWindow(AlertType.INFORMATION, "서버를 찾을수 없습니다.", "IP나 PORT가 잘못 되었습니다.");
 		} catch (Exception e) {
+			
 		}
 	}
 	
@@ -70,7 +73,6 @@ public class Client{
 			receiveThread = new Thread( () -> 
 			{
 				BufferedReader br;
-				
 				try {
 					br = new BufferedReader( //메시지 받낭.
 							new InputStreamReader(socket.getInputStream()));	
@@ -86,7 +88,7 @@ public class Client{
 			});
 			receiveThread.setDaemon(true);
 			receiveThread.start();
-			
+			System.out.println("cc");
 			//File
 		}
 		

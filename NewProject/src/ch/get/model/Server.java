@@ -56,10 +56,10 @@ public class Server extends Thread {
 					if(request == null) {
 						RootLayoutController.rcl.printText(clientIP+" 클라이언트 접속 끊김");
 						break;
-					} else {
-						RootLayoutController.rcl.printText(request);
-						pw.append("-> 서버 에서 보낸 메시지 입니다. 성공적인 접속.");
 					}
+					
+					RootLayoutController.rcl.printText(request);
+					pw.print("-> 서버 에서 보낸 메시지 입니다. 성공적인 접속.");
 				}
 			} catch (IOException e) {
 			} catch (Exception e) {

@@ -15,6 +15,7 @@ public class ClientLayoutController implements Initializable {
 	
 	public static ClientLayoutController cliContInstance = null;
 	private MainApp mainApp;
+	private Client client = null;
 	
 	@FXML ListView<String> listView;
 	private ObservableList<String> obs = FXCollections.observableArrayList(); //리스트 에 추가할 beans
@@ -27,7 +28,10 @@ public class ClientLayoutController implements Initializable {
 	
 	@FXML
 	private void connectToServer() {
-		new Client();
+		
+		if(client == null) {
+			client = new Client();
+		}
 	}
 	
 	public void inputDataListView(String temp) {
