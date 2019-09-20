@@ -73,7 +73,7 @@ public class Client{
 			receiveThread = new Thread( () -> 
 			{
 				BufferedReader br;
-				try {
+				try { 
 					br = new BufferedReader( //메시지 받낭.
 							new InputStreamReader(socket.getInputStream()));	
 					while(true) {
