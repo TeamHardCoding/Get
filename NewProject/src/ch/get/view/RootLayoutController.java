@@ -26,7 +26,7 @@ public class RootLayoutController implements Initializable {
 	}
 	
 	public void printText(String msg) {
-		textArea.appendText(msg+"\n");
+		textArea.appendText(msg+"\n\n");
 	}
 	/*
 	 * Handler
@@ -44,7 +44,7 @@ public class RootLayoutController implements Initializable {
 	public void stopServer() {
 		if(ServerHandler.getInst().getServerInstance() != null) {
 			ButtonType btType = 
-					new ShowAlertWindow(AlertType.WARNING, "서버 구동 오류", "이미 서버가 실행중 입니다 그래도 종료 하시겠습니까?")
+					new ShowAlertWindow(AlertType.WARNING, "서버 종료", "이미 서버가 실행중 입니다 그래도 종료 하시겠습니까?")
 					.getButtonResult();
 			
 			if(btType == ButtonType.OK) {

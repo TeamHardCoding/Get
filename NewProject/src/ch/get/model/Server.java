@@ -1,3 +1,6 @@
+/*
+ * Author ch.Get
+ */
 package ch.get.model;
 
 import java.io.BufferedReader;
@@ -35,7 +38,7 @@ public class Server extends Thread {
 						new BufferedWriter(
 								new OutputStreamWriter(
 										socket.getOutputStream(), 
-										StandardCharsets.UTF_8)));
+										StandardCharsets.UTF_8)), true);
 		} catch (IOException e) {
 		} catch (Exception e) {
 		}
@@ -53,7 +56,10 @@ public class Server extends Thread {
 					if(request == null) {
 						RootLayoutController.rcl.printText(clientIP+" 클라이언트 접속 끊김");
 						break;
-					} 
+					} else {
+						RootLayoutController.rcl.printText(request);
+						pw.append("-> 서버 에서 보낸 메시지 입니다. 성공적인 접속.");
+					}
 				}
 			} catch (IOException e) {
 			} catch (Exception e) {
@@ -69,8 +75,10 @@ public class Server extends Thread {
 			pw.flush();
 			pw.close();
 			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 	/**************************************************/
