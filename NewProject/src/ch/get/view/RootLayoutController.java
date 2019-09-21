@@ -43,22 +43,19 @@ public class RootLayoutController implements Initializable {
 	}
 	
 	public void stopServer() {
-		if(sh.getUserThreadLists().size() >= 1) {
+		if(sh != null) {
 			ButtonType btType = 
 					new ShowAlertWindow(AlertType.WARNING, "서버 종료", "이미 서버가 실행중 입니다 그래도 종료 하시겠습니까?")
 					.getButtonResult();
 			
 			if(btType == ButtonType.OK) {
 				sh.stopServerSocket();
+				sh.interrupt();
 				sh = null;
 			}
 		}
 	}
 	
-	@FXML
-	private void showClientProgramHandler() {
-		mainApp.initClient();
-	}
 	@FXML
 	private void showProgramHandler() {
 		new ShowAlertWindow(AlertType.INFORMATION, "1차 프로젝트", "Made By Shin");

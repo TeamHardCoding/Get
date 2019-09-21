@@ -62,6 +62,8 @@ public class ServerHandler extends Thread{
 						RootLayoutController.rcl.printText("소켓 종료 중...");
 					}
 				}
+				
+				RootLayoutController.rcl.printText("서버 종료");
 			} catch (Exception e) {
 			} finally {
 				try {

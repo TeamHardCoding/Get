@@ -6,11 +6,14 @@ package ch.get.model;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import ch.get.view.RootLayoutController;
 
@@ -23,10 +26,12 @@ public class Server extends Thread {
 	//request stream
 	private BufferedReader br;
 	private PrintWriter pw;
+	private List<Object> inStreamLists;
 	
 	public Server(Socket socket, Object lock) {
 		this.socket = socket;
 		this.lock = lock;
+		inStreamLists = new ArrayList<Object>();
 		
 		try {
 			br = new BufferedReader(
@@ -39,6 +44,9 @@ public class Server extends Thread {
 								new OutputStreamWriter(
 										socket.getOutputStream(), 
 										StandardCharsets.UTF_8)), true);
+			
+			addStream(br);
+			addStream(pw);
 		} catch (IOException e) {
 		} catch (Exception e) {
 		}
@@ -56,10 +64,10 @@ public class Server extends Thread {
 					if(request == null) {
 						RootLayoutController.rcl.printText(clientIP+" 클라이언트 접속 끊김");
 						break;
+					} else {
+						RootLayoutController.rcl.printText(request);
+						pw.write("-> 서버 에서 보낸 메시지 입니다. 성공적인 접속.");
 					}
-					
-					RootLayoutController.rcl.printText(request);
-					pw.write("-> 서버 에서 보낸 메시지 입니다. 성공적인 접속.");
 				}
 			} catch (IOException e) {
 			} catch (Exception e) {
@@ -69,12 +77,25 @@ public class Server extends Thread {
 	}
 	
 	/**************************************************/
-	//ETC
+	private void addStream(Object temp) {
+		
+		synchronized (inStreamLists) {
+			inStreamLists.add(temp);
+		}
+	}
+	
+	private void removeStream(Object temp) {
+		
+		synchronized (inStreamLists) {
+			inStreamLists.remove(temp);
+		}
+	}
+	
 	public void closeStream() {
 		try {
-			br.close();
 			pw.flush();
-			pw.close();
+			removeStream(br);
+			removeStream(pw);
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
