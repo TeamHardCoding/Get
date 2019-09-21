@@ -22,7 +22,7 @@ import javafx.scene.control.Alert.AlertType;
 public class Client{
 
 	private ClientLayoutController cont = null;
-	private final String SERVER_IP = "192.168.100.134";
+	private final String SERVER_IP = "121.164.125.138";
 	private final int SERVER_PORT = 8000;
 	private Socket socket;
 	
@@ -74,7 +74,7 @@ public class Client{
 			{
 				BufferedReader br;
 				try { 
-					br = new BufferedReader( //메시지 받낭.
+					br = new BufferedReader( //메시지 받는 쓰레드
 							new InputStreamReader(socket.getInputStream()));	
 					while(true) {
 						msg = br.readLine();
@@ -91,7 +91,6 @@ public class Client{
 			});
 			receiveThread.setDaemon(true);
 			receiveThread.start();
-			System.out.println("cc");
 			//File
 		}
 		

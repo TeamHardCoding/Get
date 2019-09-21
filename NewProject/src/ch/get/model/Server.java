@@ -63,6 +63,7 @@ public class Server extends Thread {
 				}
 			} catch (IOException e) {
 			} catch (Exception e) {
+				RootLayoutController.rcl.printText("클라이언트 접속 끊음.");
 			}
 		}
 	}
