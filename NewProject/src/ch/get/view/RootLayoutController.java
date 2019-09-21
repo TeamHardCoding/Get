@@ -17,6 +17,7 @@ public class RootLayoutController implements Initializable {
 
 	public static RootLayoutController rcl = null;
 	private MainApp mainApp;
+	private ServerHandler sh = null;
 	
 	@FXML private TextArea textArea;
 	
@@ -33,22 +34,23 @@ public class RootLayoutController implements Initializable {
 	 */
 	@FXML
 	private void startServer() {
-		if(ServerHandler.getInst().getUserThreadLists().size() > 0)
-		{
-			ServerHandler.getInst().initServer();
+		if(sh == null) {
+			sh = new ServerHandler();
+			sh.start();
 		} else {
 			new ShowAlertWindow(AlertType.WARNING, "서버 구동 오류", "이미 서버가 실행중 입니다.");
 		}
 	}
 	
 	public void stopServer() {
-		if(ServerHandler.getInst().getUserThreadLists().size() > 0) {
+		if(sh.getUserThreadLists().size() >= 1) {
 			ButtonType btType = 
 					new ShowAlertWindow(AlertType.WARNING, "서버 종료", "이미 서버가 실행중 입니다 그래도 종료 하시겠습니까?")
 					.getButtonResult();
 			
 			if(btType == ButtonType.OK) {
-				ServerHandler.getInst().stopServerSocket();
+				sh.stopServerSocket();
+				sh = null;
 			}
 		}
 	}
