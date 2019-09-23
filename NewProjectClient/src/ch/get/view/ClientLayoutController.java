@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import ch.get.MainApp;
 import ch.get.model.Client;
 import ch.get.util.ShowAlertWindow;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -61,8 +62,7 @@ public class ClientLayoutController implements Initializable {
 		if(client == null) {
 			client = new Client(lock);
 			client.initClient();
-		} else {
-			client.initClient();
+			conServerBtn.setDisable(true);
 		}
 	}
 	
@@ -81,6 +81,12 @@ public class ClientLayoutController implements Initializable {
 			inputDataListView(textField.getText());
 			textField.setText("");
 			//CLIENT 에 전송 해야함.
+		}
+	}
+	
+	public void quitFromServer() {
+		if(client != null) {
+			client.closeClient();	
 		}
 	}
 	

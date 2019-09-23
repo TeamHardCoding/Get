@@ -25,7 +25,6 @@ public class Server extends Thread {
 	
 	//request stream
 	private BufferedReader br;
-	private PrintWriter pw;
 	private List<Object> inStreamLists;
 	
 	public Server(Socket socket, Object lock) {
@@ -37,16 +36,8 @@ public class Server extends Thread {
 			br = new BufferedReader(
 					new InputStreamReader(
 							socket.getInputStream(), 
-							StandardCharsets.UTF_8));
-		
-			pw = new PrintWriter(
-						new BufferedWriter(
-								new OutputStreamWriter(
-										socket.getOutputStream(), 
-										StandardCharsets.UTF_8)), true);
-			
+							StandardCharsets.UTF_8));	
 			addStream(br);
-			addStream(pw);
 		} catch (IOException e) {
 		} catch (Exception e) {
 		}
@@ -61,16 +52,14 @@ public class Server extends Thread {
 					String request = br.readLine();
 					String clientIP = socket.getRemoteSocketAddress().toString();
 					
-					if(request == null) {
+					if(request.equalsIgnoreCase("quit")) {
 						RootLayoutController.rcl.printText(clientIP+" 클라이언트 접속 끊김");
-						break;
 					} else {
-						RootLayoutController.rcl.printText(request+" 11");
+						RootLayoutController.rcl.printText(request+"");
 					}
 				}
 			} catch (IOException e) {
 			} catch (Exception e) {
-				RootLayoutController.rcl.printText("클라이언트 접속 끊음.");
 			}
 		}
 	}
@@ -83,24 +72,23 @@ public class Server extends Thread {
 		}
 	}
 	
-	private void removeStream(Object temp) {
-		
-		synchronized (inStreamLists) {
-			inStreamLists.remove(temp);
-		}
-	}
-	
 	public void closeStream() {
+		PrintWriter pw;
+		
 		try {
-			pw.print("Exit");
-			pw.flush();
-			removeStream(br);
-			removeStream(pw);
-			socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+			pw = new PrintWriter(
+					new BufferedWriter(
+							new OutputStreamWriter(
+									socket.getOutputStream(),
+									StandardCharsets.UTF_8)), 
+									true);
+			
+			pw.write("quit"); //소켓을 닫기전 클라이언트의 종료 메시지 전송
+			
+			inStreamLists.clear(); //스트림을 지움
+			socket.close(); //소켓을 닫음
+			this.interrupt(); //현재 서버 인터럽트 함
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	/**************************************************/

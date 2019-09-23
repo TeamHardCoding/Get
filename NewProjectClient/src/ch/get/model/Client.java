@@ -30,7 +30,7 @@ public class Client{
 	private PrintWriter pw;
 	String msg;
 	
-	public Client(Object locl) 
+	public Client(Object lock) 
 	{
 		//동기화 Mutex
 		this.lock = lock;
@@ -54,7 +54,10 @@ public class Client{
 									StandardCharsets.UTF_8)),
 									true);
 			//데이터 통신 쓰레드 실행
-			new ChatClientReceiveThread(socket).start();
+			new ChatClientReceiveThread(socket).start(); //리시브
+			
+			new ChatClientWritingThread(socket).start(); //센드
+			
 			
 		} catch (UnknownHostException e) {
 			new ShowAlertWindow(AlertType.INFORMATION, "호스트를 찾을수 없습니다.", "서버관리자 에게 문의 하세요.");
@@ -68,7 +71,25 @@ public class Client{
 	}
 	
 	public void closeClient() {
+		PrintWriter pw;
 		
+		synchronized (lock) {
+			if(socket != null) {
+				try {
+					pw = new PrintWriter(
+							new BufferedWriter(
+									new OutputStreamWriter(
+											socket.getOutputStream(),
+											StandardCharsets.UTF_8)),
+											true);
+					
+					pw.println("quit");
+					socket.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	public void setServerPort(int serverPort) {
@@ -91,6 +112,24 @@ public class Client{
 	}
 	
 	//데이터 송수신 스트링
+	class ChatClientWritingThread extends Thread {
+	
+		private Socket socket = null;
+		private String requestFromServer;
+		
+		public ChatClientWritingThread(Socket socket) {
+			this.socket = socket;
+		}
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			while(true) {
+				
+			}
+		}
+	}
+	
 	//메시지 받기
 	class ChatClientReceiveThread extends Thread {
 		//initClient
@@ -99,7 +138,6 @@ public class Client{
 		
 		public ChatClientReceiveThread(Socket socket) {
 			this.socket = socket;
-			cont.inputDataListView("클라이언트 서버 접속 완료!");
 		}
 		
 		@Override
@@ -110,22 +148,18 @@ public class Client{
 			try { 
 				br = new BufferedReader( //메시지 받는 쓰레드
 						new InputStreamReader(socket.getInputStream()));	
+				
 				while(true) {
 					msg = br.readLine();
-					cont.inputDataListView(msg);
-					
-					if(msg == null) {
-						cont.inputDataListView("서버 연결 끊김...");
-						break;
-					} else if(msg.equalsIgnoreCase("Exit")) {
-						break;
-					}else {
-						
+					if(msg.equalsIgnoreCase("quit")) { //서버에서 종료 메시지가 온다면 종료시킴
+						closeClient();
 					}
+					cont.inputDataListView(msg);	
 				}
 			} catch (IOException e) {
 			} catch (Exception e) {
 			}
 		}
+
 	}
 }
