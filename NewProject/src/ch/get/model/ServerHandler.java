@@ -35,6 +35,7 @@ public class ServerHandler extends Thread{
 			while(true) {
 				Socket socket = serverSocket.accept();
 				Server server = new Server(socket, lock);
+				server.start();
 				userThreadLists.put(server.getClientID(), server); //家南 积己
 			}
 		} catch (UnknownHostException e) {

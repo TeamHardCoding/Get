@@ -58,6 +58,10 @@ public class MainApp extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Client");
 			primaryStage.setResizable(false);
+			primaryStage.setOnCloseRequest(event -> {
+				
+				
+			});
 			primaryStage.show();
 			
 			ClientLayoutController.cliContInstance.setMainApp(this);

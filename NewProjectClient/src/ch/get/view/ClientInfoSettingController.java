@@ -16,6 +16,7 @@ public class ClientInfoSettingController implements Initializable{
 	
 	@FXML private TextField serverIp;
 	@FXML private TextField serverPort;
+	private String serverPortString;
 	
 	private MainApp mainApp;
 	private Stage settingStage;
@@ -29,9 +30,16 @@ public class ClientInfoSettingController implements Initializable{
 	
 	@FXML
 	private void handleOk() {
-		boolean isVaild = CheckVaildAddress.getInstance().checkAddress(serverIp.getText());
+		boolean isVaild = CheckVaildAddress.getInstance().checkAddress(serverIp.getText(), serverPort.getText());
 		
 		if(isVaild) {
+			if((serverPort.getText().length() <= 0) || (serverPort.getText() == null)) {
+				serverPortString = "8000";
+				new ShowAlertWindow(AlertType.INFORMATION, "기본 포트 설정", "포트 미입력 으로 8000 으로 기본 설정 합니다.");
+			} else {
+				serverPortString = serverPort.getText();
+			}
+			
 			isOkClicked = true;
 			closeStage();
 		} else { 
@@ -53,8 +61,9 @@ public class ClientInfoSettingController implements Initializable{
 		return serverIp.getText();
 	}
 	public String getServerPort() {
-		return serverPort.getText();
+		return serverPortString;
 	}
+	
 	public void setSettingStage(Stage settingStage) {
 		this.settingStage = settingStage;
 	}

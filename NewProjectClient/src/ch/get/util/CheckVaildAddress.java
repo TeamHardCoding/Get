@@ -2,6 +2,8 @@ package ch.get.util;
 
 import java.util.StringTokenizer;
 
+import javafx.scene.control.Alert.AlertType;
+
 public class CheckVaildAddress {
 
 	private String msg;
@@ -12,13 +14,13 @@ public class CheckVaildAddress {
 		public static final CheckVaildAddress INSTANCE = new CheckVaildAddress();
 	}
 	
-	public boolean checkAddress(String temp) {
+	public boolean checkAddress(String temp, String port) {
 		StringTokenizer st = new StringTokenizer(temp, ".");
 		int value = 0;
 		msg = "";
 		
 		try {
-			if(temp.length() > 0) {
+			if((temp.length() > 0) && (st.countTokens() == 4)) {
 				while (st.hasMoreElements()) {
 					temp = st.nextToken();
 					value = Integer.parseInt(temp);
@@ -35,7 +37,13 @@ public class CheckVaildAddress {
 			}
 		} catch (Exception e) {
 			msg += "IP는 정수형태 여야 합니다.";
-		}			
+		}
+		
+		try {
+			if(port.length() > 0) { Integer.parseInt(port); }
+		} catch (Exception e) {
+			msg += "포트는 오로지 숫자 여야 합니다.";
+		}
 		
 		if(msg.length() > 0) {
 			return false;

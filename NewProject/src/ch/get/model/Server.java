@@ -65,8 +65,7 @@ public class Server extends Thread {
 						RootLayoutController.rcl.printText(clientIP+" 클라이언트 접속 끊김");
 						break;
 					} else {
-						RootLayoutController.rcl.printText(request);
-						pw.write("-> 서버 에서 보낸 메시지 입니다. 성공적인 접속.");
+						RootLayoutController.rcl.printText(request+" 11");
 					}
 				}
 			} catch (IOException e) {
@@ -93,6 +92,7 @@ public class Server extends Thread {
 	
 	public void closeStream() {
 		try {
+			pw.print("Exit");
 			pw.flush();
 			removeStream(br);
 			removeStream(pw);
