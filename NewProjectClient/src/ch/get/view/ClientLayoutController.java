@@ -35,11 +35,8 @@ public class ClientLayoutController implements Initializable {
 		boolean okCliecked = mainApp.showSettingWindow();
 		
 		if(okCliecked) {
-			setServerIp(serverIp);
-			setServerPort(serverPort);
-			
-			System.out.println(serverIp);
-			System.out.println(serverPort);
+			serverIp = ClientInfoSettingController.inst.getServerIp();
+			serverPort = ClientInfoSettingController.inst.getServerPort();
 		}
 	}
 	
