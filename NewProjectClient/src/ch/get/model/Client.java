@@ -84,6 +84,7 @@ public class Client{
 											true);
 					
 					pw.println("quit");
+					pw.close();
 					socket.close();
 				} catch (Exception e) {
 					e.printStackTrace();

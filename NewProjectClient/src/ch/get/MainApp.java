@@ -60,7 +60,7 @@ public class MainApp extends Application {
 			primaryStage.setResizable(false);
 			primaryStage.setOnCloseRequest(event -> {
 				
-				
+				ClientLayoutController.cliContInstance.quitFromServer();
 			});
 			primaryStage.show();
 			

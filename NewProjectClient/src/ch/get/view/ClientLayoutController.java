@@ -90,12 +90,12 @@ public class ClientLayoutController implements Initializable {
 		}
 	}
 	
-	public void exitClientProgram() {
-		if(client != null) {
-			client.closeClient();
-		}
-	}
-	
+//	public void exitClientProgram() {
+//		if(client != null) {
+//			client.closeClient();
+//		}
+//	}
+//	
 	public void inputDataListView(String temp) {
 		
 		if(client != null) {

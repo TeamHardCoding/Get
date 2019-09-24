@@ -4,15 +4,11 @@
 package ch.get.model;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 import ch.get.view.RootLayoutController;
@@ -20,83 +16,61 @@ import ch.get.view.RootLayoutController;
 public class Server extends Thread {
 	
 	private Socket socket;
-	private String clientID;
-	private Object lock;
+	private List<PrintWriter> listWriters;
+	private String request;
+	private String name;
 	
-	//request stream
-	private BufferedReader br;
-	private List<Object> inStreamLists;
-	
-	public Server(Socket socket, Object lock) {
+	public Server(Socket socket, List<PrintWriter> temp) {
 		this.socket = socket;
-		this.lock = lock;
-		inStreamLists = new ArrayList<Object>();
-		
-		try {
-			br = new BufferedReader(
-					new InputStreamReader(
-							socket.getInputStream(), 
-							StandardCharsets.UTF_8));	
-			addStream(br);
-		} catch (IOException e) {
-		} catch (Exception e) {
-		}
+		listWriters = temp;
 	}
 	
 	@Override
 	public void run() {
+		request = null;
 		
-		synchronized (lock) {
-			try {
-				while(true) {
-					String request = br.readLine();
-					String clientIP = socket.getRemoteSocketAddress().toString();
-					
-					if(request.equalsIgnoreCase("quit")) {
-						RootLayoutController.rcl.printText(clientIP+" 클라이언트 접속 끊김");
-					} else {
-						RootLayoutController.rcl.printText(request+"");
-					}
+		try {
+			BufferedReader br = 
+					new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+			
+			while(true) {
+				request = br.readLine();
+				
+				if(request == null) {
+					printText("클라이언트 접속 종료.");
 				}
-			} catch (IOException e) {
-			} catch (Exception e) {
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			
+		} catch (Exception e) {
+			
+		}
+	}
+	
+	private void procQuit(PrintWriter pw) {
+		removeWriter(pw); //스트림 삭제
+		
+		String data = this.name+"님이 퇴장했습니다.";
+		broadCaster(data);
+	}
+	
+	private void broadCaster(String temp) {
+		synchronized (listWriters) {
+			for (PrintWriter printWriter : listWriters) {
+				printWriter.print(temp);
+				printWriter.flush();
 			}
 		}
 	}
 	
-	/**************************************************/
-	private void addStream(Object temp) {
-		
-		synchronized (inStreamLists) {
-			inStreamLists.add(temp);
+	private void removeWriter(PrintWriter pw) {
+		synchronized (listWriters) {
+			listWriters.remove(pw);
 		}
 	}
 	
-	public void closeStream() {
-		PrintWriter pw;
-		
-		try {
-			pw = new PrintWriter(
-					new BufferedWriter(
-							new OutputStreamWriter(
-									socket.getOutputStream(),
-									StandardCharsets.UTF_8)), 
-									true);
-			
-			pw.write("quit"); //소켓을 닫기전 클라이언트의 종료 메시지 전송
-			
-			inStreamLists.clear(); //스트림을 지움
-			socket.close(); //소켓을 닫음
-			this.interrupt(); //현재 서버 인터럽트 함
-		} catch (Exception e) {
-		}
-	}
-	/**************************************************/
-	
-	/*
-	 * getter/setter
-	 */
-	public String getClientID() {
-		return clientID;
+	private void printText(String msg) {
+		RootLayoutController.rcl.printText(msg);
 	}
 }
