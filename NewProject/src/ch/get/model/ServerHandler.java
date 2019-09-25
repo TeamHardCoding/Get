@@ -1,5 +1,10 @@
 package ch.get.model;
 
+/*
+ * protocol reference - Protocol
+ * 
+ */
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -21,7 +26,7 @@ public class ServerHandler extends Thread{
 	private List<String> clientIpLists = new ArrayList<String>();
 	private ServerSocket serverSocket = null;
 	
-	public Object lock = new Object();
+	private Server serverInst = null;
 	
 	@Override
 	public void run() {	
@@ -33,28 +38,47 @@ public class ServerHandler extends Thread{
 			
 			while(true) {
 				Socket socket = serverSocket.accept();
-				new Server(socket, clientLists, clientIpLists).start();
+				serverInst = new Server(socket, clientLists, clientIpLists);
+				serverInst.start();
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 		} finally {
-			if(serverSocket != null && !serverSocket.isClosed()) {
-				try {
-					serverSocket.close();
-					RootLayoutController.rcl.printText("서버 종료");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			closeServerSocket(getServerSocket());
 		}
 	}
 	
 	/**************************************************/
-	public void stopServerSocket() {
-		
+	public boolean stopServer() { //컨트롤러 핸들링
+		try {
+			if(serverInst != null) {
+				serverInst.procQuitFromServer();
+				return true;
+			} else {
+				return false;
+			}		
+		} catch (Exception e) {
+			return false;
+		} finally {
+			closeServerSocket(getServerSocket());
+		}
+
 	}
-	/**************************************************/
+	
+	private void closeServerSocket(ServerSocket serverSocket) { //서버소켓 close
+		
+		try {
+			if((serverSocket != null) || (!serverSocket.isClosed())) {
+				serverSocket.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	//getter
+	public ServerSocket getServerSocket() {
+		return serverSocket;
+	}
 	public List<String> getClientIpLists() {
 		return clientIpLists;
 	}

@@ -5,7 +5,6 @@ package ch.get;
  */
 import java.io.IOException;
 
-import ch.get.util.Protocol;
 import ch.get.view.RootLayoutController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -53,7 +52,7 @@ public class MainApp extends Application {
 			primaryStage.setAlwaysOnTop(false);
 			primaryStage.setResizable(false);
 			primaryStage.setOnCloseRequest(event -> {
-				RootLayoutController.rcl.stopServer();
+				RootLayoutController.rcl.exitProgramHandler();
 			});
 			primaryStage.show();
 			

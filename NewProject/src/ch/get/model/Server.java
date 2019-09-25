@@ -24,6 +24,9 @@ public class Server extends Thread {
 	private String name;
 	private String endUserIp;
 	
+	//스트림
+	private PrintWriter pw;
+	
 	public Server(Socket socket, List<PrintWriter> temp, List<String> clientIpLists) {
 		this.socket = socket;
 		listWriters = temp;
@@ -40,8 +43,7 @@ public class Server extends Thread {
 			BufferedReader br = 
 					new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 			
-			PrintWriter pw = 
-					new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8)), true);
+			pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8)), true);
 			
 			while(true) {
 				request = br.readLine();
@@ -59,6 +61,7 @@ public class Server extends Thread {
 					printText(endUserIp+" : "+msg+" 접솟");
 					procJoin(msg, pw); //조인 했을때 브로드 캐스트 함.
 				} else if(proTemp.equals(Protocol.QUIT.name())) {
+					printText(endUserIp+" : "+msg+" 접속 끊김");
 					procQuit(pw);
 				} else if(proTemp.equals(Protocol.MSG.name())) {
 					procSendMsg(msg);
@@ -76,6 +79,15 @@ public class Server extends Thread {
 		}
 	}
 	
+	/*서버 명령*/
+	public void procQuitFromServer() { //서버 명령
+		printText(endUserIp+" : "+"접속 끊김 - 서버 명령");
+		
+		String data = this.name+"님이 퇴장했습니다.";
+		procQuit(getPw()); //procQuit 에 브로드 캐스트 포함
+	}
+	
+	/*클라 명령*/
 	private void procSendMsg(String msg) {
 		broadCaster(this.name+" : "+msg);
 	}
@@ -86,7 +98,7 @@ public class Server extends Thread {
 		broadCaster(this.name);
 	}
 	
-	private void procQuit(PrintWriter pw) {
+	private void procQuit(PrintWriter pw) { // 브로드 캐스트 포함
 		removeWriter(pw); //스트림 삭제
 		
 		String data = this.name+"님이 퇴장했습니다.";
@@ -116,5 +128,9 @@ public class Server extends Thread {
 
 	private void printText(String msg) { //서버 콘솔 창에 접속 메시지 출력
 		RootLayoutController.rcl.printText(msg);
+	}
+	
+	public PrintWriter getPw() {
+		return pw;
 	}
 }

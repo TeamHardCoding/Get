@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import ch.get.MainApp;
 import ch.get.model.ServerHandler;
 import ch.get.util.ShowAlertWindow;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
@@ -29,6 +28,7 @@ public class RootLayoutController implements Initializable {
 	public void printText(String msg) {
 		textArea.appendText(msg+"\n\n");
 	}
+	
 	/*
 	 * Handler
 	 */
@@ -42,27 +42,29 @@ public class RootLayoutController implements Initializable {
 		}
 	}
 	
-	public void stopServer() {
+	@FXML
+	private void stopServer() {
 		if(sh != null) {
 			ButtonType btType = 
 					new ShowAlertWindow(AlertType.WARNING, "서버 종료", "이미 서버가 실행중 입니다 그래도 종료 하시겠습니까?")
 					.getButtonResult();
 			
 			if(btType == ButtonType.OK) {
-				sh.stopServerSocket();
-				sh.interrupt();
-				sh = null;
+				boolean vaild = sh.stopServer();
+				if(vaild) {
+					sh = null;
+				}
 			}
 		}
+	}
+	
+	public void exitProgramHandler() {
+		stopServer();
 	}
 	
 	@FXML
 	private void showProgramHandler() {
 		new ShowAlertWindow(AlertType.INFORMATION, "1차 프로젝트", "Made By Shin");
-	}
-	public void exitProgramHandler() {
-		stopServer();
-		Platform.exit();
 	}
 	/*
 	 * setter
