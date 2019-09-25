@@ -5,6 +5,7 @@ package ch.get;
  */
 import java.io.IOException;
 
+import ch.get.util.Protocol;
 import ch.get.view.RootLayoutController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,17 @@ public class MainApp extends Application {
 		
 		//initLayout
 		initRoot();
+		
+//		String toTemp[] = "join:msg".split(":");
+//		for (String string : toTemp) {
+//			System.out.println(string);
+//		}
+		
+		/*
+		 * param
+		 * join
+		 * msg
+		 */
 	}
 	
 	public void initRoot() {

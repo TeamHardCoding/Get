@@ -18,6 +18,7 @@ public class ServerHandler extends Thread{
 	private final int PORT;
 	private String serverIp;
 	private List<PrintWriter> clientLists = new ArrayList<PrintWriter>();
+	private List<String> clientIpLists = new ArrayList<String>();
 	private ServerSocket serverSocket = null;
 	
 	public Object lock = new Object();
@@ -32,7 +33,7 @@ public class ServerHandler extends Thread{
 			
 			while(true) {
 				Socket socket = serverSocket.accept();
-				new Server(socket, clientLists).start();
+				new Server(socket, clientLists, clientIpLists).start();
 			}
 		} catch (IOException e) {
 		} finally {
@@ -54,6 +55,9 @@ public class ServerHandler extends Thread{
 	/**************************************************/
 	
 	//getter
+	public List<String> getClientIpLists() {
+		return clientIpLists;
+	}
 	public List<PrintWriter> getClientLists() {
 		return clientLists;
 	}
