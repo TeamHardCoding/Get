@@ -47,32 +47,32 @@ public class Server implements Runnable {
 							new InputStreamReader(
 									socket.getInputStream(), StandardCharsets.UTF_8));
 			
-			pw = new PrintWriter
-					(new BufferedWriter(
+			pw = new PrintWriter(
 							new OutputStreamWriter(
-									socket.getOutputStream(), StandardCharsets.UTF_8)), true);
+									socket.getOutputStream(), StandardCharsets.UTF_8));
 			
 			while(true) {
 				request = br.readLine();
-				System.out.println(request);
+//				System.out.println(request);
 				
 				if(request == null) {
 					printText("클라이언트 접속 종료.");
+					procQuit(pw);
 					break;
 				}
 				
-				String protocol[] = request.split(":");
+				String[] protocol = request.split(":");
 				String proTemp = protocol[0].toUpperCase();	
 				String msg = protocol[1];
 				
 				if(proTemp.equals(Protocol.JOIN.name())) {
-					printText(endUserIp+" : "+msg);
+					printText(endUserIp+":"+msg); // 닉네임
 					procJoin(msg, pw); //조인 했을때 브로드 캐스트 함.
 				} else if(proTemp.equals(Protocol.QUIT.name())) {
-					printText(endUserIp+" : "+msg+" 접속 끊김");
+					printText(endUserIp+":"+msg+" 접속 끊김");
 					procQuit(pw);
 				} else if(proTemp.equals(Protocol.MSG.name())) {
-					System.out.println("chk");
+//					System.out.println("chk");
 					procSendMsg(msg);
 				} else {
 					if(proTemp.equals(Protocol.FILE.name())) {
@@ -81,6 +81,7 @@ public class Server implements Runnable {
 				}
 			}
 		} catch (IOException e) {
+			printText(this.name+" 접속 종료");
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();	
@@ -89,7 +90,7 @@ public class Server implements Runnable {
 	
 	/*서버 명령*/
 	public void procQuitFromServer() { //서버 명령
-		printText(endUserIp+" : "+"접속 끊김 - 서버 명령");
+		printText(endUserIp+":"+"접속 끊김 - 서버 명령");
 		pw.println("서버에서 접속을 종료 시켰습니다.");
 		
 		String data = this.name+"님이 퇴장했습니다.";
@@ -98,14 +99,14 @@ public class Server implements Runnable {
 	
 	/*클라 명령*/
 	private void procSendMsg(String msg) {
-		printText(endUserIp+" : "+msg);
-		broadCaster(this.name+" : "+msg);
+		printText(endUserIp+":"+msg);
+		broadCaster(this.name+":"+msg);
 	}
 	
 	private void procJoin(String nickname, PrintWriter pw) {
 		this.name = nickname;
-		addWriter(pw);
 		broadCaster(this.name+" 접속.");
+		addWriter(pw);
 	}
 	
 	private void procQuit(PrintWriter pw) { // 브로드 캐스트 포함
@@ -116,7 +117,6 @@ public class Server implements Runnable {
 	}
 	
 	private void broadCaster(String temp) { //클라이언트 브로드 캐스트
-		pw.println("전송");
 		synchronized (listWriters) {
 			for (PrintWriter printWriter : listWriters) {
 				printWriter.println(temp);

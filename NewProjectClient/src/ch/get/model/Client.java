@@ -29,10 +29,6 @@ public class Client{
 	private String serverIp;
 	private Socket socket;
 	private ChatClientReceiveThread chatReceiveThread;
-//	private ChatClientWritingThread chatWritingThread;
-	
-	//sendMsg
-	private PrintWriter pw;
 	
 	public Client(Object lock) 
 	{
@@ -50,12 +46,9 @@ public class Client{
 			
 			socket.connect(
 					new InetSocketAddress(serverIp, serverPort), 3000); //서버 접속, 타임아웃 10초
-	
-			//메시지 입력을 위한 스트림 생성
-			pw = new PrintWriter(
-					new BufferedWriter(
-							new OutputStreamWriter(
-									socket.getOutputStream(),StandardCharsets.UTF_8)),true);
+			
+			//키보드 입력
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			
 			//데이터 통신 쓰레드 실행
 			chatReceiveThread = new ChatClientReceiveThread(socket); //리시브
@@ -64,7 +57,8 @@ public class Client{
 			//쓰레드 스타트
 			chatReceiveThread.start();
 //			chatWritingThread.start();
-			joinToServer("접속 하셨습니다.");
+			String nickName = "클라";
+			joinToServer(nickName);
 		} catch (UnknownHostException e) {
 			new ShowAlertWindow(AlertType.INFORMATION, "호스트를 찾을수 없습니다.", "서버관리자 에게 문의 하세요.");
 		} catch (IOException e) {
@@ -78,18 +72,16 @@ public class Client{
 	
 	//클라이언트 종료
 	public void closeClient() {
-		PrintWriter pw;
-		
+		PrintWriter pw;		
 		synchronized (lock) {
 			if(socket != null) {
 				try {
 					pw = new PrintWriter(
-							new BufferedWriter(
-									new OutputStreamWriter(socket.getOutputStream(),StandardCharsets.UTF_8)),true);
+							new OutputStreamWriter(
+									socket.getOutputStream(), StandardCharsets.UTF_8));
 					
-					pw.write("quit: ");
-					pw.close();
-					socket.close();
+					pw.println(Protocol.QUIT.name()+":"+"\r\n");
+//					socket.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -98,55 +90,43 @@ public class Client{
 	}
 	
 	public void sendMsgToServer(String msg) { //메시지 보내기
-		String temp = Protocol.MSG.name() //프로토콜 명시
-				+":" //프로토콜 토큰
-				+msg; //메시지 명시
+		PrintWriter pw;
 		
-		pw.println(temp);
-		pw.flush();
+		try {
+			String temp = Protocol.MSG.name() //프로토콜 명시
+					+":" //프로토콜 토큰
+					+msg+"\r\n"; //메시지 명시
+		
+			pw = new PrintWriter(
+					new OutputStreamWriter(
+							socket.getOutputStream(), StandardCharsets.UTF_8)); 
+			
+			pw.println(temp);
+			pw.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void joinToServer(String msg) {
 		String temp = Protocol.JOIN.name()
 				+":"
-				+msg;
+				+msg+"\r\n";
 		
-		pw.println(temp);
-	}
-	
-	public void setServerPort(int serverPort) {
-		this.serverPort = serverPort;
-	}
+		//sendMsg
+		PrintWriter pw;
+		try {
+			pw = new PrintWriter(
+					new OutputStreamWriter(
+							socket.getOutputStream(), StandardCharsets.UTF_8));
+			pw.println(temp);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		//메시지 입력을 위한 스트림 생성
 
-	public void setServerIp(String serverIp) {
-		this.serverIp = serverIp;
+		
 	}
-	
-	
-//	//데이터 송수신 스트링
-//	class ChatClientWritingThread extends Thread {
-//	
-//		private Socket socket = null;
-//		
-//		public ChatClientWritingThread(Socket socket) {
-//			this.socket = socket;
-//		}
-//		
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			
-//			try {
-//
-//				
-//				while(true) {
-//					
-//				}	
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
 	
 	//메시지 받기
 	class ChatClientReceiveThread extends Thread {
@@ -169,21 +149,20 @@ public class Client{
 				
 				while(true) {
 					request = br.readLine();
-					String protocol[] = request.split(":");
-					String proTemp = protocol[0].toUpperCase();	
-					String msg = protocol[1];
-					
-					if(proTemp.equalsIgnoreCase(Protocol.QUIT.name())) { //서버에서 종료 메시지가 온다면 종료시킴
-						closeClient();
-						return;
-					} else {
-						cont.inputDataListView(msg);	
-					}
+					cont.inputDataListView(request);
 				}
 			} catch (IOException e) {
 			} catch (Exception e) {
 			}
 		}
 
+	}
+	
+	public void setServerPort(int serverPort) {
+		this.serverPort = serverPort;
+	}
+
+	public void setServerIp(String serverIp) {
+		this.serverIp = serverIp;
 	}
 }

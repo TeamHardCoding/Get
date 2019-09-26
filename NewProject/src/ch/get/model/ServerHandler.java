@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -54,7 +55,11 @@ public class ServerHandler extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-
+			try {
+				closeServer();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
 		}
 	}
 
@@ -68,8 +73,12 @@ public class ServerHandler extends Thread {
 		try {
 			if (!clientSockets.isEmpty()) {
 				for (Socket socket : clientSockets) {
-					pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
+					pw = new PrintWriter(
+							new OutputStreamWriter(
+									socket.getOutputStream(), StandardCharsets.UTF_8));
+					
 					pw.println(request);
+					pw.flush();
 					RootLayoutController.rcl.printText(socket.getLocalAddress()+"에게 종료 명령 전송...");
 				}
 				
