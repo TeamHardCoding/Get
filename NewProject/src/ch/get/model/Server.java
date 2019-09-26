@@ -72,6 +72,7 @@ public class Server extends Thread {
 					printText(endUserIp+" : "+msg+" 접속 끊김");
 					procQuit(pw);
 				} else if(proTemp.equals(Protocol.MSG.name())) {
+					System.out.println("chk");
 					procSendMsg(msg);
 				} else {
 					if(proTemp.equals(Protocol.FILE.name())) {
@@ -89,7 +90,7 @@ public class Server extends Thread {
 	/*서버 명령*/
 	public void procQuitFromServer() { //서버 명령
 		printText(endUserIp+" : "+"접속 끊김 - 서버 명령");
-		pw.write("서버에서 접속을 종료 시켰습니다.");
+		pw.println("서버에서 접속을 종료 시켰습니다.");
 		
 		String data = this.name+"님이 퇴장했습니다.";
 		procQuit(getPw()); //procQuit 에 브로드 캐스트 포함
@@ -104,7 +105,7 @@ public class Server extends Thread {
 	private void procJoin(String nickname, PrintWriter pw) {
 		this.name = nickname;
 		addWriter(pw);
-		broadCaster(this.name);
+		broadCaster(this.name+" 접속.");
 	}
 	
 	private void procQuit(PrintWriter pw) { // 브로드 캐스트 포함
@@ -115,9 +116,10 @@ public class Server extends Thread {
 	}
 	
 	private void broadCaster(String temp) { //클라이언트 브로드 캐스트
+		pw.println("전송");
 		synchronized (listWriters) {
 			for (PrintWriter printWriter : listWriters) {
-				printWriter.print(temp);
+				printWriter.println(temp);
 				printWriter.flush();
 			}
 		}

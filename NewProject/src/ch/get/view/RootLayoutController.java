@@ -63,7 +63,7 @@ public class RootLayoutController implements Initializable {
 	
 	@FXML
 	private void showProgramHandler() {
-		new ShowAlertWindow(AlertType.INFORMATION, "1차 프로젝트", "Made By Shin");
+		new ShowAlertWindow(AlertType.INFORMATION, "Server", "Made By Shin");
 	}
 	/*
 	 * setter

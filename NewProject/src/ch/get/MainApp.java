@@ -48,7 +48,7 @@ public class MainApp extends Application {
 			Scene scene = new Scene(rootLayout);
 			
 			primaryStage.setScene(scene);
-			primaryStage.setTitle("1차 프로젝트");
+			primaryStage.setTitle("Server");
 			primaryStage.setAlwaysOnTop(false);
 			primaryStage.setResizable(false);
 			primaryStage.setOnCloseRequest(event -> {

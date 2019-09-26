@@ -103,6 +103,7 @@ public class Client{
 				+msg; //메시지 명시
 		
 		pw.println(temp);
+		pw.flush();
 	}
 	
 	public void joinToServer(String msg) {
@@ -151,7 +152,7 @@ public class Client{
 	class ChatClientReceiveThread extends Thread {
 		//initClient
 		private Socket socket;
-		private String msg;
+		private String request;
 		
 		public ChatClientReceiveThread(Socket socket) {
 			this.socket = socket;
@@ -167,11 +168,17 @@ public class Client{
 						new InputStreamReader(socket.getInputStream()));	
 				
 				while(true) {
-					msg = br.readLine();
-					if(msg.equalsIgnoreCase("quit")) { //서버에서 종료 메시지가 온다면 종료시킴
+					request = br.readLine();
+					String protocol[] = request.split(":");
+					String proTemp = protocol[0].toUpperCase();	
+					String msg = protocol[1];
+					
+					if(proTemp.equalsIgnoreCase(Protocol.QUIT.name())) { //서버에서 종료 메시지가 온다면 종료시킴
 						closeClient();
+						return;
+					} else {
+						cont.inputDataListView(msg);	
 					}
-					cont.inputDataListView(msg);	
 				}
 			} catch (IOException e) {
 			} catch (Exception e) {
