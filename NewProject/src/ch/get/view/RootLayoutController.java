@@ -36,7 +36,7 @@ public class RootLayoutController implements Initializable {
 	private void startServer() {
 		if(sh == null) {
 			sh = new ServerHandler();
-			sh.start();
+			sh.start(); 
 		} else {
 			new ShowAlertWindow(AlertType.WARNING, "서버 구동 오류", "이미 서버가 실행중 입니다.");
 		}
@@ -50,10 +50,9 @@ public class RootLayoutController implements Initializable {
 					.getButtonResult();
 			
 			if(btType == ButtonType.OK) {
-				boolean vaild = sh.stopServer();
-				if(vaild) {
-					sh = null;
-				}
+				sh.stopServer();
+				printText("서버 종료");
+				sh = null;
 			}
 		}
 	}

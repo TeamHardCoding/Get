@@ -78,9 +78,9 @@ public class ClientLayoutController implements Initializable {
 	private void handleSendButton() {
 		int textLength = textField.getText().length();
 		if(textLength > 0) {
-			inputDataListView(textField.getText());
+			inputDataListView(getMsgFromTextField()); //클라에다가 텍스트 입력
+			client.sendMsgToServer(getMsgFromTextField()); //text 가져오기
 			textField.setText("");
-			//CLIENT 에 전송 해야함.
 		}
 	}
 	
@@ -119,6 +119,11 @@ public class ClientLayoutController implements Initializable {
 		this.mainApp = mainApp;
 	}
 	
+	/***************************************************/
+	public String getMsgFromTextField() {
+		String msg = this.textField.getText();
+		return msg;
+	}
 	public String getServerIp() {
 		return serverIp;
 	}

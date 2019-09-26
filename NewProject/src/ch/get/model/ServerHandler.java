@@ -27,6 +27,7 @@ public class ServerHandler extends Thread{
 	private ServerSocket serverSocket = null;
 	
 	private Server serverInst = null;
+	private Object lock = new Object();
 	
 	@Override
 	public void run() {	
@@ -42,39 +43,43 @@ public class ServerHandler extends Thread{
 				serverInst.start();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
-			closeServerSocket(getServerSocket());
+			interrupt();
 		}
 	}
 	
 	/**************************************************/
 	public boolean stopServer() { //컨트롤러 핸들링
+		boolean op = false;
+		
 		try {
 			if(serverInst != null) {
 				serverInst.procQuitFromServer();
-				return true;
+				op = true;
 			} else {
-				return false;
+				closeServerSocket(getServerSocket());
+				op = false;
 			}		
 		} catch (Exception e) {
-			return false;
-		} finally {
-			closeServerSocket(getServerSocket());
-		}
-
+			e.printStackTrace();
+			op = false;
+		} 
+		
+		return op;
 	}
 	
 	private void closeServerSocket(ServerSocket serverSocket) { //서버소켓 close
-		
 		try {
 			if((serverSocket != null) || (!serverSocket.isClosed())) {
+				
 				serverSocket.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	//getter
 	public ServerSocket getServerSocket() {
 		return serverSocket;

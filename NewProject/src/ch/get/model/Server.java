@@ -1,5 +1,7 @@
 /*
  * Author ch.Get
+ * 
+ * protocol lists / JOIN, QUIT, MSG, FILE
  */
 package ch.get.model;
 
@@ -41,24 +43,30 @@ public class Server extends Thread {
 		
 		try {
 			BufferedReader br = 
-					new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+					new BufferedReader(
+							new InputStreamReader(
+									socket.getInputStream(), StandardCharsets.UTF_8));
 			
-			pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8)), true);
+			pw = new PrintWriter
+					(new BufferedWriter(
+							new OutputStreamWriter(
+									socket.getOutputStream(), StandardCharsets.UTF_8)), true);
 			
 			while(true) {
 				request = br.readLine();
+				System.out.println(request);
 				
 				if(request == null) {
 					printText("클라이언트 접속 종료.");
 					break;
 				}
 				
-				String protocol[] = request.split(".");
+				String protocol[] = request.split(":");
 				String proTemp = protocol[0].toUpperCase();	
 				String msg = protocol[1];
 				
 				if(proTemp.equals(Protocol.JOIN.name())) {
-					printText(endUserIp+" : "+msg+" 접솟");
+					printText(endUserIp+" : "+msg);
 					procJoin(msg, pw); //조인 했을때 브로드 캐스트 함.
 				} else if(proTemp.equals(Protocol.QUIT.name())) {
 					printText(endUserIp+" : "+msg+" 접속 끊김");
@@ -72,16 +80,16 @@ public class Server extends Thread {
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			
+			e.printStackTrace();
 		} catch (Exception e) {
-			
+			e.printStackTrace();	
 		}
 	}
 	
 	/*서버 명령*/
 	public void procQuitFromServer() { //서버 명령
 		printText(endUserIp+" : "+"접속 끊김 - 서버 명령");
+		pw.write("서버에서 접속을 종료 시켰습니다.");
 		
 		String data = this.name+"님이 퇴장했습니다.";
 		procQuit(getPw()); //procQuit 에 브로드 캐스트 포함
@@ -89,6 +97,7 @@ public class Server extends Thread {
 	
 	/*클라 명령*/
 	private void procSendMsg(String msg) {
+		printText(endUserIp+" : "+msg);
 		broadCaster(this.name+" : "+msg);
 	}
 	

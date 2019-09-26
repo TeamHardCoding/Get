@@ -1,5 +1,7 @@
 /*
  * Author ch.Get
+ * 
+ * protocol lists / JOIN, QUIT, MSG, FILE
  */
 package ch.get.model;
 
@@ -14,6 +16,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 
+import ch.get.util.Protocol;
 import ch.get.util.ShowAlertWindow;
 import ch.get.view.ClientLayoutController;
 import javafx.scene.control.Alert.AlertType;
@@ -25,10 +28,11 @@ public class Client{
 	private int serverPort;
 	private String serverIp;
 	private Socket socket;
+	private ChatClientReceiveThread chatReceiveThread;
+//	private ChatClientWritingThread chatWritingThread;
 	
 	//sendMsg
 	private PrintWriter pw;
-	String msg;
 	
 	public Client(Object lock) 
 	{
@@ -46,19 +50,21 @@ public class Client{
 			
 			socket.connect(
 					new InetSocketAddress(serverIp, serverPort), 3000); //서버 접속, 타임아웃 10초
-			
+	
+			//메시지 입력을 위한 스트림 생성
 			pw = new PrintWriter(
 					new BufferedWriter(
 							new OutputStreamWriter(
-									socket.getOutputStream(),
-									StandardCharsets.UTF_8)),
-									true);
+									socket.getOutputStream(),StandardCharsets.UTF_8)),true);
+			
 			//데이터 통신 쓰레드 실행
-			new ChatClientReceiveThread(socket).start(); //리시브
+			chatReceiveThread = new ChatClientReceiveThread(socket); //리시브
+//			chatWritingThread = new ChatClientWritingThread(socket); //센드
 			
-			new ChatClientWritingThread(socket).start(); //센드
-			
-			
+			//쓰레드 스타트
+			chatReceiveThread.start();
+//			chatWritingThread.start();
+			joinToServer("접속 하셨습니다.");
 		} catch (UnknownHostException e) {
 			new ShowAlertWindow(AlertType.INFORMATION, "호스트를 찾을수 없습니다.", "서버관리자 에게 문의 하세요.");
 		} catch (IOException e) {
@@ -70,6 +76,7 @@ public class Client{
 		}
 	}
 	
+	//클라이언트 종료
 	public void closeClient() {
 		PrintWriter pw;
 		
@@ -78,12 +85,9 @@ public class Client{
 				try {
 					pw = new PrintWriter(
 							new BufferedWriter(
-									new OutputStreamWriter(
-											socket.getOutputStream(),
-											StandardCharsets.UTF_8)),
-											true);
+									new OutputStreamWriter(socket.getOutputStream(),StandardCharsets.UTF_8)),true);
 					
-					pw.println("quit");
+					pw.write("quit: ");
 					pw.close();
 					socket.close();
 				} catch (Exception e) {
@@ -91,6 +95,22 @@ public class Client{
 				}
 			}
 		}
+	}
+	
+	public void sendMsgToServer(String msg) { //메시지 보내기
+		String temp = Protocol.MSG.name() //프로토콜 명시
+				+":" //프로토콜 토큰
+				+msg; //메시지 명시
+		
+		pw.println(temp);
+	}
+	
+	public void joinToServer(String msg) {
+		String temp = Protocol.JOIN.name()
+				+":"
+				+msg;
+		
+		pw.println(temp);
 	}
 	
 	public void setServerPort(int serverPort) {
@@ -101,35 +121,31 @@ public class Client{
 		this.serverIp = serverIp;
 	}
 	
-	public void sendMsgToServer(String msg) {
-		this.msg = socket.getLocalAddress().getHostAddress()
-				+"("
-				+socket.getLocalAddress().getHostName()
-				+")"
-				+" : "
-				+msg;
-		
-		pw.println(this.msg);
-	}
 	
-	//데이터 송수신 스트링
-	class ChatClientWritingThread extends Thread {
-	
-		private Socket socket = null;
-		private String requestFromServer;
-		
-		public ChatClientWritingThread(Socket socket) {
-			this.socket = socket;
-		}
-		
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			while(true) {
-				
-			}
-		}
-	}
+//	//데이터 송수신 스트링
+//	class ChatClientWritingThread extends Thread {
+//	
+//		private Socket socket = null;
+//		
+//		public ChatClientWritingThread(Socket socket) {
+//			this.socket = socket;
+//		}
+//		
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+//			
+//			try {
+//
+//				
+//				while(true) {
+//					
+//				}	
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 	
 	//메시지 받기
 	class ChatClientReceiveThread extends Thread {
