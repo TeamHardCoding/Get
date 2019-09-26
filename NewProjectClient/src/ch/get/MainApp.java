@@ -13,20 +13,20 @@ import javafx.stage.Stage;
 public class MainApp extends Application {
 
 	private Stage primaryStage;
-	
+
 	private BorderPane rootLayout;
 	private GridPane settingLayout;
-	
+
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
-		
-		//init
+
+		// init
 		initRoot();
 	}
 
 	public boolean showSettingWindow() {
-		
+
 		try {
 			FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("view/ClientInfoSetting.fxml"));
 			settingLayout = (GridPane) loader.load();
@@ -39,7 +39,7 @@ public class MainApp extends Application {
 			stage.initOwner(primaryStage);
 			ClientInfoSettingController.inst.setMainApp(this);
 			ClientInfoSettingController.inst.setSettingStage(stage);
-			
+
 			stage.showAndWait();
 			return ClientInfoSettingController.inst.isOkClicked();
 		} catch (Exception e) {
@@ -47,39 +47,41 @@ public class MainApp extends Application {
 			return false;
 		}
 	}
-	
+
 	public void initRoot() {
-		
+
 		try {
 			FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("view/ClientLayout.fxml"));
-			rootLayout = (BorderPane)loader.load();
-			
+			rootLayout = (BorderPane) loader.load();
+
 			Scene scene = new Scene(rootLayout);
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Client");
 			primaryStage.setResizable(false);
 			primaryStage.setOnCloseRequest(event -> {
-				
+
 				ClientLayoutController.cliContInstance.quitFromServer();
 			});
 			primaryStage.show();
-			
+
 			ClientLayoutController.cliContInstance.setMainApp(this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
 	public BorderPane getRootLayout() {
 		return rootLayout;
 	}
+
 	public GridPane getSettingLayout() {
 		return settingLayout;
 	}
+
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}

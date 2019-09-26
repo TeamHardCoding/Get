@@ -18,7 +18,7 @@ import java.util.List;
 import ch.get.util.Protocol;
 import ch.get.view.RootLayoutController;
 
-public class Server extends Thread {
+public class Server implements Runnable {
 	
 	private Socket socket;
 	private List<PrintWriter> listWriters;
