@@ -101,7 +101,7 @@ public class ClientLayoutController implements Initializable {
 		if(client != null) {
 			if(listView != null) {
 				listView.getItems().add(temp);
-				client.sendMsgToServer(temp);
+//				client.sendMsgToServer(temp);
 			}
 		}
 	}

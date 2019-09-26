@@ -62,20 +62,34 @@ public class Server implements Runnable {
 				}
 				
 				String[] protocol = request.split(":");
-				String proTemp = protocol[0].toUpperCase();	
-				String msg = protocol[1];
+//				String proTemp = protocol[0].toUpperCase();	
+//				String msg = protocol[1];
 				
-				if(proTemp.equals(Protocol.JOIN.name())) {
-					printText(endUserIp+":"+msg); // 닉네임
-					procJoin(msg, pw); //조인 했을때 브로드 캐스트 함.
-				} else if(proTemp.equals(Protocol.QUIT.name())) {
-					printText(endUserIp+":"+msg+" 접속 끊김");
+//				if(proTemp.equals(Protocol.JOIN.name())) {
+//					printText(endUserIp+":"+msg); // 닉네임
+//					procJoin(msg, pw); //조인 했을때 브로드 캐스트 함.
+//				} else if(proTemp.equals(Protocol.QUIT.name())) {
+//					printText(endUserIp+":"+msg+" 접속 끊김");
+//					procQuit(pw);
+//				} else if(proTemp.equals(Protocol.MSG.name())) {
+////					System.out.println("chk");
+//					procSendMsg(msg);
+//				} else {
+//					if(proTemp.equals(Protocol.FILE.name())) {
+//						
+//					}
+//				}
+				
+				if(protocol[0].equals(Protocol.JOIN.name())) {
+					printText(endUserIp+":"+protocol[1]); // 닉네임
+					procJoin(protocol[1], pw); //조인 했을때 브로드 캐스트 함.
+				} else if(protocol[0].equals(Protocol.QUIT.name())) {
+					printText(endUserIp+":"+protocol[1]+" 접속 끊김");
 					procQuit(pw);
-				} else if(proTemp.equals(Protocol.MSG.name())) {
-//					System.out.println("chk");
-					procSendMsg(msg);
+				} else if(protocol[0].equals(Protocol.MSG.name())) {
+					procSendMsg(protocol[1]);
 				} else {
-					if(proTemp.equals(Protocol.FILE.name())) {
+					if(protocol[0].equals(Protocol.FILE.name())) {
 						
 					}
 				}
@@ -117,11 +131,9 @@ public class Server implements Runnable {
 	}
 	
 	private void broadCaster(String temp) { //클라이언트 브로드 캐스트
-		synchronized (listWriters) {
-			for (PrintWriter printWriter : listWriters) {
-				printWriter.println(temp);
-				printWriter.flush();
-			}
+		for (PrintWriter printWriter : listWriters) {
+			printWriter.println(temp);
+			printWriter.flush();
 		}
 	}
 	
