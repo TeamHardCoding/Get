@@ -62,29 +62,13 @@ public class Server implements Runnable {
 				}
 				
 				String[] protocol = request.split(":");
-//				String proTemp = protocol[0].toUpperCase();	
-//				String msg = protocol[1];
-				
-//				if(proTemp.equals(Protocol.JOIN.name())) {
-//					printText(endUserIp+":"+msg); // 닉네임
-//					procJoin(msg, pw); //조인 했을때 브로드 캐스트 함.
-//				} else if(proTemp.equals(Protocol.QUIT.name())) {
-//					printText(endUserIp+":"+msg+" 접속 끊김");
-//					procQuit(pw);
-//				} else if(proTemp.equals(Protocol.MSG.name())) {
-////					System.out.println("chk");
-//					procSendMsg(msg);
-//				} else {
-//					if(proTemp.equals(Protocol.FILE.name())) {
-//						
-//					}
-//				}
+//				System.out.println(request);
 				
 				if(protocol[0].equals(Protocol.JOIN.name())) {
 					printText(endUserIp+":"+protocol[1]); // 닉네임
 					procJoin(protocol[1], pw); //조인 했을때 브로드 캐스트 함.
 				} else if(protocol[0].equals(Protocol.QUIT.name())) {
-					printText(endUserIp+":"+protocol[1]+" 접속 끊김");
+					printText(endUserIp+":"+" 접속 끊김");
 					procQuit(pw);
 				} else if(protocol[0].equals(Protocol.MSG.name())) {
 					procSendMsg(protocol[1]);
@@ -104,9 +88,17 @@ public class Server implements Runnable {
 	
 	/*서버 명령*/
 	public void procQuitFromServer() { //서버 명령
-		printText(endUserIp+":"+"접속 끊김 - 서버 명령");
-		pw.println("서버에서 접속을 종료 시켰습니다.");
+		PrintWriter pw;
 		
+		printText(endUserIp+":"+"접속 끊김 - 서버 명령");
+		
+		try {
+			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+			pw.println("서버에서 접속을 종료 시켰습니다.\r\n");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+			
 		String data = this.name+"님이 퇴장했습니다.";
 		procQuit(getPw()); //procQuit 에 브로드 캐스트 포함
 	}
@@ -131,6 +123,9 @@ public class Server implements Runnable {
 	}
 	
 	private void broadCaster(String temp) { //클라이언트 브로드 캐스트
+		
+		System.out.println(listWriters.size()+" left pW Size");
+		
 		for (PrintWriter printWriter : listWriters) {
 			printWriter.println(temp);
 			printWriter.flush();

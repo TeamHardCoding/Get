@@ -6,7 +6,6 @@
 package ch.get.model;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -81,8 +80,11 @@ public class Client{
 									socket.getOutputStream(), StandardCharsets.UTF_8));
 					
 					pw.println(Protocol.QUIT.name()+":"+"\r\n");
-//					socket.close();
+					pw.flush();
+//					System.out.println("closeClient");
+					socket.close();
 				} catch (Exception e) {
+					System.out.println("Exception");
 					e.printStackTrace();
 				}
 			}
@@ -96,7 +98,9 @@ public class Client{
 			String temp = Protocol.MSG.name() //프로토콜 명시
 					+":" //프로토콜 토큰
 					+msg+"\r\n"; //메시지 명시
-		
+			
+			ClientLayoutController.cliContInstance.inputDataListView(msg);
+			
 			pw = new PrintWriter(
 					new OutputStreamWriter(
 							socket.getOutputStream(), StandardCharsets.UTF_8)); 
@@ -115,6 +119,7 @@ public class Client{
 		
 		//sendMsg
 		PrintWriter pw;
+		
 		try {
 			pw = new PrintWriter(
 					new OutputStreamWriter(
@@ -149,6 +154,7 @@ public class Client{
 				
 				while(true) {
 					request = br.readLine();
+					System.out.println(request);
 					cont.inputDataListView(request);
 				}
 			} catch (IOException e) {

@@ -1,5 +1,7 @@
 package ch.get;
-
+/*
+ * Client
+ */
 import ch.get.view.ClientInfoSettingController;
 import ch.get.view.ClientLayoutController;
 import javafx.application.Application;
@@ -60,7 +62,7 @@ public class MainApp extends Application {
 			primaryStage.setResizable(false);
 			primaryStage.setOnCloseRequest(event -> {
 
-				ClientLayoutController.cliContInstance.quitFromServer();
+				System.exit(0);
 			});
 			primaryStage.show();
 

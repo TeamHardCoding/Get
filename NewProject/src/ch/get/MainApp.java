@@ -1,7 +1,7 @@
 package ch.get;
 
 /*
- * Author ch.Get
+ * Server Author ch.Get
  */
 import java.io.IOException;
 

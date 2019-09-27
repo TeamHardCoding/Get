@@ -58,7 +58,13 @@ public class RootLayoutController implements Initializable {
 	}
 
 	public void exitProgramHandler() {
-		stopServer();
+
+		ButtonType btnType = new ShowAlertWindow(AlertType.WARNING, "강제 종료", "강제 종료 합니다.")
+				.getButtonResult();
+		
+		if (btnType == ButtonType.OK) {
+			System.exit(0);
+		}
 	}
 
 	@FXML

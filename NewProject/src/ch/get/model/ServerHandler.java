@@ -42,7 +42,7 @@ public class ServerHandler extends Thread {
 			serverSocket = new ServerSocket(); // 서버소켓 생성
 			serverIp = InetAddress.getLocalHost().getHostAddress(); // 서버 IP를 받아옴
 			serverSocket.bind(new InetSocketAddress(serverIp, PORT));
-			RootLayoutController.rcl.printText("서버 IP : " + serverIp + "서버 PORT : " + getPORT());
+			RootLayoutController.rcl.printText("서버 IP : " + serverIp + " 서버 PORT : " + getPORT());
 			RootLayoutController.rcl.printText("서버 접속 대기중...");
 
 			while (true) {
@@ -54,12 +54,6 @@ public class ServerHandler extends Thread {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				closeServer();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
 		}
 	}
 
@@ -101,37 +95,6 @@ public class ServerHandler extends Thread {
 		
 		return closeServer();
 	}
-
-//	/**************************************************/
-//	public boolean stopServer() { // 컨트롤러 핸들링
-//		boolean op = false;
-//
-//		try {
-//			if (serverInst != null) {
-//				serverInst.procQuitFromServer();
-//				op = true;
-//			} else {
-//				closeServerSocket(getServerSocket());
-//				op = false;
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			op = false;
-//		}
-//
-//		return op;
-//	}
-//
-//	private void closeServerSocket(ServerSocket serverSocket) { // 서버소켓 close
-//		try {
-//			if ((serverSocket != null) || (!serverSocket.isClosed())) {
-//
-//				serverSocket.close();
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 	// getter
 	public int getPORT() {

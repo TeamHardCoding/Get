@@ -1,5 +1,6 @@
 package ch.get.view;
 
+import java.io.ObjectInputStream.GetField;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -78,29 +79,26 @@ public class ClientLayoutController implements Initializable {
 	private void handleSendButton() {
 		int textLength = textField.getText().length();
 		if(textLength > 0) {
-			inputDataListView(getMsgFromTextField()); //클라에다가 텍스트 입력
+//			inputDataListView(getMsgFromTextField()); //클라에다가 텍스트 입력
 			client.sendMsgToServer(getMsgFromTextField()); //text 가져오기
 			textField.setText("");
 		}
 	}
 	
 	public void quitFromServer() {
+		
 		if(client != null) {
-			client.closeClient();	
+			client.closeClient();
+			client = null;
 		}
 	}
-	
-//	public void exitClientProgram() {
-//		if(client != null) {
-//			client.closeClient();
-//		}
-//	}
-//	
+
 	public void inputDataListView(String temp) {
 		
 		if(client != null) {
 			if(listView != null) {
 				listView.getItems().add(temp);
+				System.out.println(listView.getItems().size()+" Client 재고");
 //				client.sendMsgToServer(temp);
 			}
 		}
@@ -120,6 +118,9 @@ public class ClientLayoutController implements Initializable {
 	}
 	
 	/***************************************************/
+	public ListView<String> getListView() {
+		return listView;
+	} 
 	public String getMsgFromTextField() {
 		String msg = this.textField.getText();
 		return msg;
