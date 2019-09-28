@@ -2,8 +2,6 @@ package ch.get.util;
 
 import java.util.StringTokenizer;
 
-import javafx.scene.control.Alert.AlertType;
-
 public class CheckVaildAddress {
 
 	private String msg;

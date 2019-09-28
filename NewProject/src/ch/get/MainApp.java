@@ -13,40 +13,37 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-	
+
 	private Stage primaryStage;
 	private MainApp mainApp;
 	private BorderPane rootLayout;
-	
+
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		this.mainApp = this;
-		
-		//initLayout
+
+		// initLayout
 		initRoot();
-		
+
 //		String toTemp[] = "join:msg".split(":");
 //		for (String string : toTemp) {
 //			System.out.println(string);
 //		}
-		
+
 		/*
-		 * param
-		 * join
-		 * msg
+		 * param join msg
 		 */
 	}
-	
+
 	public void initRoot() {
-		
+
 		try {
-			FXMLLoader loader = new FXMLLoader(
-					MainApp.class.getResource("view/RootLayout.fxml"));
-			
+			FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("view/RootLayout.fxml"));
+
 			rootLayout = (BorderPane) loader.load();
 			Scene scene = new Scene(rootLayout);
-			
+
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Server");
 			primaryStage.setAlwaysOnTop(false);
@@ -55,7 +52,7 @@ public class MainApp extends Application {
 				RootLayoutController.rcl.exitProgramHandler();
 			});
 			primaryStage.show();
-			
+
 			RootLayoutController.rcl.setMainApp(mainApp);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -63,7 +60,7 @@ public class MainApp extends Application {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}

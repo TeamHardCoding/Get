@@ -19,135 +19,132 @@ import ch.get.util.Protocol;
 import ch.get.view.RootLayoutController;
 
 public class Server implements Runnable {
-	
+
 	private Socket socket;
 	private List<PrintWriter> listWriters;
 	private String request;
 	private String name;
 	private String endUserIp;
-	
-	//스트림
+
+	// 스트림
 	private PrintWriter pw;
-	
+
 	public Server(Socket socket, List<PrintWriter> temp, List<String> clientIpLists) {
 		this.socket = socket;
 		listWriters = temp;
 		endUserIp = socket.getInetAddress().getHostAddress();
-		
+
 		clientIpLists.add(endUserIp);
 	}
-	
+
 	@Override
 	public void run() {
 		request = null;
-		
+
 		try {
-			BufferedReader br = 
-					new BufferedReader(
-							new InputStreamReader(
-									socket.getInputStream(), StandardCharsets.UTF_8));
-			
-			pw = new PrintWriter(
-							new OutputStreamWriter(
-									socket.getOutputStream(), StandardCharsets.UTF_8));
-			
-			while(true) {
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+
+			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+
+			while (true) {
 				request = br.readLine();
 //				System.out.println(request);
-				
-				if(request == null) {
+
+				if (request == null) {
 					printText("클라이언트 접속 종료.");
 					procQuit(pw);
 					break;
 				}
-				
+
 				String[] protocol = request.split(":");
 //				System.out.println(request);
-				
-				if(protocol[0].equals(Protocol.JOIN.name())) {
-					printText(endUserIp+":"+protocol[1]); // 닉네임
-					procJoin(protocol[1], pw); //조인 했을때 브로드 캐스트 함.
-				} else if(protocol[0].equals(Protocol.QUIT.name())) {
-					printText(endUserIp+":"+" 접속 끊김");
+
+				if (protocol[0].equals(Protocol.JOIN.name())) {
+					printText(endUserIp + ":" + protocol[1]); // 닉네임
+					procJoin(protocol[1], pw); // 조인 했을때 브로드 캐스트 함.
+				} else if (protocol[0].equals(Protocol.QUIT.name())) {
+					printText(endUserIp + ":" + " 접속 끊김");
 					procQuit(pw);
-				} else if(protocol[0].equals(Protocol.MSG.name())) {
+				} else if (protocol[0].equals(Protocol.MSG.name())) {
 					procSendMsg(protocol[1]);
 				} else {
-					if(protocol[0].equals(Protocol.FILE.name())) {
-						
+					if (protocol[0].equals(Protocol.FILE.name())) {
+
 					}
 				}
 			}
 		} catch (IOException e) {
-			printText(this.name+" 접속 종료");
+			printText(this.name + " 접속 종료");
 			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();	
+			e.printStackTrace();
 		}
 	}
-	
-	/*서버 명령*/
-	public void procQuitFromServer() { //서버 명령
+
+	/* 서버 명령 */
+	public void procQuitFromServer() { // 서버 명령
 		PrintWriter pw;
-		
-		printText(endUserIp+":"+"접속 끊김 - 서버 명령");
-		
+
+		printText(endUserIp + ":" + "접속 끊김 - 서버 명령");
+
 		try {
 			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
 			pw.println("서버에서 접속을 종료 시켰습니다.\r\n");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-			
-		String data = this.name+"님이 퇴장했습니다.";
-		procQuit(getPw()); //procQuit 에 브로드 캐스트 포함
+
+		String data = this.name + "님이 퇴장했습니다.";
+		procQuit(getPw()); // procQuit 에 브로드 캐스트 포함
 	}
-	
-	/*클라 명령*/
+
+	/* 클라 명령 */
 	private void procSendMsg(String msg) {
-		printText(endUserIp+":"+msg);
-		broadCaster(this.name+":"+msg);
+		printText(endUserIp + ":" + msg);
+		broadCaster(this.name + ":" + msg);
 	}
-	
+
 	private void procJoin(String nickname, PrintWriter pw) {
 		this.name = nickname;
-		broadCaster(this.name+" 접속.");
+		broadCaster(this.name + " 접속.");
 		addWriter(pw);
 	}
-	
+
 	private void procQuit(PrintWriter pw) { // 브로드 캐스트 포함
-		removeWriter(pw); //스트림 삭제
-		
-		String data = this.name+"님이 퇴장했습니다.";
+		removeWriter(pw); // 스트림 삭제
+
+		String data = this.name + "님이 퇴장했습니다.";
 		broadCaster(data);
 	}
-	
-	private void broadCaster(String temp) { //클라이언트 브로드 캐스트
-		
-		System.out.println(listWriters.size()+" left pW Size");
-		
-		for (PrintWriter printWriter : listWriters) {
-			printWriter.println(temp);
-			printWriter.flush();
+
+	private void broadCaster(String temp) { // 클라이언트 브로드 캐스트
+
+		System.out.println(listWriters.size() + " left pW Size");
+		synchronized (listWriters) {
+			for (PrintWriter printWriter : listWriters) {
+				printWriter.println(temp);
+				printWriter.flush();
+			}
 		}
 	}
-	
-	private void addWriter(PrintWriter pw) { //클라이언트 접속 할대 스트림 추가
+
+	private void addWriter(PrintWriter pw) { // 클라이언트 접속 할대 스트림 추가
 		synchronized (listWriters) {
 			listWriters.add(pw);
 		}
 	}
-	
-	private void removeWriter(PrintWriter pw) { //클라이언트 접속 종료 할때 스트림 지움
+
+	private void removeWriter(PrintWriter pw) { // 클라이언트 접속 종료 할때 스트림 지움
 		synchronized (listWriters) {
 			listWriters.remove(pw);
 		}
 	}
 
-	private void printText(String msg) { //서버 콘솔 창에 접속 메시지 출력
+	private void printText(String msg) { // 서버 콘솔 창에 접속 메시지 출력
 		RootLayoutController.rcl.printText(msg);
 	}
-	
+
 	public PrintWriter getPw() {
 		return pw;
 	}

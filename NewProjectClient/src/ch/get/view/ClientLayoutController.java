@@ -1,29 +1,27 @@
 package ch.get.view;
 
-import java.io.ObjectInputStream.GetField;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import ch.get.MainApp;
 import ch.get.model.Client;
 import ch.get.util.ShowAlertWindow;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 
 public class ClientLayoutController implements Initializable {
 	
 	public static ClientLayoutController cliContInstance = null;
 	private Object lock = new Object();
-	private String serverIp;
-	private String serverPort;
+//	private String serverIp;
+//	private String serverPort;
 	private MainApp mainApp;
 	private Client client = null;
 	
@@ -47,16 +45,16 @@ public class ClientLayoutController implements Initializable {
 		});
 	}
 	
-	@FXML
-	private void showClientSetting() {
-		boolean okCliecked = mainApp.showSettingWindow();
-		
-		if(okCliecked) {
-			serverIp = ClientInfoSettingController.inst.getServerIp();
-			serverPort = ClientInfoSettingController.inst.getServerPort();
-			conServerBtn.setDisable(false);
-		}
-	}
+//	@FXML
+//	private void showClientSetting() {
+//		boolean okCliecked = mainApp.showSettingWindow();
+//		
+//		if(okCliecked) {
+//			serverIp = ClientInfoSettingController.inst.getServerIp();
+//			serverPort = ClientInfoSettingController.inst.getServerPort();
+//			conServerBtn.setDisable(false);
+//		}
+//	}
 	
 	@FXML
 	private void connectToServer() {
@@ -107,12 +105,12 @@ public class ClientLayoutController implements Initializable {
 	/*
 	 * setter/getter
 	 */
-	public void setServerIp(String serverIp) {
-		this.serverIp = serverIp;
-	}
-	public void setServerPort(String serverPort) {
-		this.serverPort = serverPort;
-	}
+//	public void setServerIp(String serverIp) {
+//		this.serverIp = serverIp;
+//	}
+//	public void setServerPort(String serverPort) {
+//		this.serverPort = serverPort;
+//	}
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 	}
@@ -125,10 +123,10 @@ public class ClientLayoutController implements Initializable {
 		String msg = this.textField.getText();
 		return msg;
 	}
-	public String getServerIp() {
-		return serverIp;
-	}
-	public int getServerPort() {
-		return Integer.parseInt(serverPort);
-	}
+//	public String getServerIp() {
+//		return serverIp;
+//	}
+//	public int getServerPort() {
+//		return Integer.parseInt(serverPort);
+//	}
 }

@@ -28,7 +28,6 @@
                               <Button mnemonicParsing="false" onAction="#handleSendMsg" text="Send" />
                               <Button fx:id="conServerBtn" mnemonicParsing="false" onAction="#connectToServer" text="Connect" />
                               <Button mnemonicParsing="false" onAction="#quitFromServer" text="QuitServer" />
-                              <Button mnemonicParsing="false" onAction="#showClientSetting" text="Setting" />
                            </children>
                            <padding>
                               <Insets left="2.0" />

@@ -1,12 +1,19 @@
 package ch.get;
+
+import ch.get.model.ServerStat;
+import ch.get.util.ShowAlertWindow;
 /*
  * Client
  */
 import ch.get.view.ClientInfoSettingController;
 import ch.get.view.ClientLayoutController;
+import ch.get.view.LoginLayoutController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -18,13 +25,54 @@ public class MainApp extends Application {
 
 	private BorderPane rootLayout;
 	private GridPane settingLayout;
+	private GridPane loginLayout;
 
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 
+		primaryStage.setResizable(false);
+		primaryStage.setOnCloseRequest(event -> {
+			System.exit(0);
+		});
+
 		// init
-		initRoot();
+		boolean op = showLoginWindow();
+
+		if (op) {
+			initRoot();
+		}
+	}
+
+	public boolean showLoginWindow() {
+
+		try {
+			FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("view/LoginLayout.fxml"));
+			loginLayout = (GridPane) loader.load();
+			Scene scene = new Scene(loginLayout);
+			Stage stage = new Stage();
+			stage.setScene(scene);
+			stage.setTitle("로그인");
+			stage.setResizable(false);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setOnCloseRequest(event -> {
+				System.exit(0);
+			});
+
+			LoginLayoutController.loginCont.setMainApp(this);
+			LoginLayoutController.loginCont.setLoginStage(stage);
+			ButtonType btOp = new ShowAlertWindow(AlertType.INFORMATION, "계정 생성", "처음 접속 하신다면 관리자에게 계정을 문의 하세요.")
+					.getButtonResult();
+
+			if (btOp == ButtonType.OK) {
+				stage.showAndWait();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return LoginLayoutController.loginCont.isOkClicked();
 	}
 
 	public boolean showSettingWindow() {
@@ -59,11 +107,6 @@ public class MainApp extends Application {
 			Scene scene = new Scene(rootLayout);
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Client");
-			primaryStage.setResizable(false);
-			primaryStage.setOnCloseRequest(event -> {
-
-				System.exit(0);
-			});
 			primaryStage.show();
 
 			ClientLayoutController.cliContInstance.setMainApp(this);
