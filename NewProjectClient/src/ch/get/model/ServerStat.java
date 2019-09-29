@@ -13,55 +13,56 @@ public class ServerStat implements Runnable {
 	private Label serverStatLabel;
 	private Socket socket;
 	private boolean isOkClicked;
-	private boolean serverStat;
 	private String serverIp;
-	private int serverPort;
-	private static HashMap<String, ServerInfo> serverLists;
-	
+	private String serverPort;
+	private static HashMap<Integer, ServerInfo> serverLists;
+
 	public ServerStat(Label label) {
 		serverStatLabel = label;
-		socket = new Socket();
-		serverStat = false; //OK가 눌리면 서버 상태 넣어줌
-		isOkClicked = false; //OK눌렸는지
+		isOkClicked = false; // OK눌렸는지
 		serverLists = LoginLayoutController.getServerLists();
 	}
 
 	@Override
 	public void run() {
-		
-		while(true) {
 
-			if(Thread.currentThread().isInterrupted()) {
+		while (true) {
+
+			if (Thread.currentThread().isInterrupted()) {
 				System.out.println("Thread Exit --");
 				break;
 			}
-			
+
 			try {
-				Thread.sleep(500);
-				if(serverLists.size() > 0 ) {
+				Thread.sleep(1000);
+				if (serverLists.size() > 0) {
 					isOkClicked = ClientInfoSettingController.inst.isOkClicked();
-					
-					if(isOkClicked) {
-						serverIp = serverLists.get("1").getServerIp();
-						serverIp = serverLists.get("1").getServerPort();
-						
-						socket.connect(new InetSocketAddress(serverIp, serverPort));
-						socket.setKeepAlive(false);
-						serverStat = true;
-					}				
+
+					if (isOkClicked) {
+						socket = getNewSocket();
+						ClientInfoSettingController.inst.setOkClicked(false);
+						serverIp = serverLists.get(0).getServerIp();
+						serverPort = serverLists.get(0).getServerPort();
+						socket.connect(new InetSocketAddress(serverIp, Integer.parseInt(serverPort)));
+						socket.close();
+					}
 				}
-					
 			} catch (Exception e) {
-				serverStat = false;
 				e.printStackTrace();
 			}
-			
-			if(serverStat) {
-				System.out.println("1");
-				serverStatLabel.setStyle("-fx-background-color: slateblue;");
-			} else {
-				serverStatLabel.setStyle("-fx-background-color: red;");
+
+			if (socket != null) {
+				if (socket.isConnected()) {
+					serverStatLabel.setStyle("-fx-background-color: green;");
+				} else {
+					serverStatLabel.setStyle("-fx-background-color: red;");
+				}
 			}
 		}
+	}
+
+	public Socket getNewSocket() {
+		socket = new Socket();
+		return socket;
 	}
 }
