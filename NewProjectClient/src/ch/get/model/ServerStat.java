@@ -40,15 +40,16 @@ public class ServerStat implements Runnable {
 
 					if (isOkClicked) {
 						socket = getNewSocket();
-						ClientInfoSettingController.inst.setOkClicked(false);
 						serverIp = serverLists.get(0).getServerIp();
 						serverPort = serverLists.get(0).getServerPort();
+						
 						socket.connect(new InetSocketAddress(serverIp, Integer.parseInt(serverPort)));
+						ClientInfoSettingController.inst.setOkClicked(false);
 						socket.close();
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				serverStatLabel.setStyle("-fx-background-color: red;");
 			}
 
 			if (socket != null) {
