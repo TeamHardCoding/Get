@@ -37,15 +37,16 @@ public class Client {
 		// 최초 서버 설정
 		loginCont = LoginLayoutController.loginCont;
 		clientCont = ClientLayoutController.cliContInstance;
+//		socket = LoginLayoutController.
 	}
 
 	public void initClient() {
 		try {
-			socket = new Socket();
-			serverIp = loginCont.getServerIp();
-			serverPort = loginCont.getServerPort();
+//			socket = new Socket();
+//			serverIp = loginCont.getServerIp();
+//			serverPort = loginCont.getServerPort();
 
-			socket.connect(new InetSocketAddress(serverIp, serverPort), 3000); // 서버 접속, 타임아웃 10초
+//			socket.connect(new InetSocketAddress(serverIp, serverPort), 3000); // 서버 접속, 타임아웃 10초
 
 			// 키보드 입력
 //			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -57,13 +58,14 @@ public class Client {
 			// 쓰레드 스타트
 			chatReceiveThread.start();
 //			chatWritingThread.start();
-			String nickName = "클라";
-			joinToServer(nickName);
-		} catch (UnknownHostException e) {
-			new ShowAlertWindow(AlertType.INFORMATION, "호스트를 찾을수 없습니다.", "서버관리자 에게 문의 하세요.");
-		} catch (IOException e) {
-			new ShowAlertWindow(AlertType.INFORMATION, "서버를 찾을수 없습니다.", "IP나 PORT가 잘못 되었습니다.");
-		} catch (Exception e) {
+//			String nickName = "클라";
+//			joinToServer(nickName);
+		}
+//		} catch (UnknownHostException e) {
+//			new ShowAlertWindow(AlertType.INFORMATION, "호스트를 찾을수 없습니다.", "서버관리자 에게 문의 하세요.");
+//		} catch (IOException e) {
+//			new ShowAlertWindow(AlertType.INFORMATION, "서버를 찾을수 없습니다.", "IP나 PORT가 잘못 되었습니다.");
+		  catch (Exception e) {
 			e.printStackTrace();
 			String msg = "입력값\n" + "IP : " + serverIp + "\nPORT : " + serverPort;
 			new ShowAlertWindow(AlertType.ERROR, "Setting을 눌러 IP 설정", msg);
@@ -109,22 +111,22 @@ public class Client {
 		}
 	}
 
-	public void joinToServer(String msg) {
-		String temp = Protocol.JOIN.name() + ":" + msg + "\r\n";
-
-		// sendMsg
-		PrintWriter pw;
-
-		try {
-			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
-
-			pw.println(temp);
-			pw.flush();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		// 메시지 입력을 위한 스트림 생성
-	}
+//	public void joinToServer(String msg) {
+//		String temp = Protocol.JOIN.name() + ":" + msg + "\r\n";
+//
+//		// sendMsg
+//		PrintWriter pw;
+//
+//		try {
+//			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+//
+//			pw.println(temp);
+//			pw.flush();
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		// 메시지 입력을 위한 스트림 생성
+//	}
 
 	// 메시지 받기
 	class ChatClientReceiveThread extends Thread {

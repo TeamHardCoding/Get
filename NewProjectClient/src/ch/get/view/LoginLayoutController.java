@@ -62,12 +62,7 @@ public class LoginLayoutController implements Initializable {
 		if (okCliecked) {
 			serverIp = ClientInfoSettingController.inst.getServerIp();
 			serverPort = ClientInfoSettingController.inst.getServerPort();
-//			System.out.println(serverIp+" "+serverPort); 넘어옴
 			serverLists.put(serverNo++, new ServerInfo("유저서버", serverIp, serverPort));
-
-//			System.out.println(serverLists.size());
-//			System.out.println(serverLists.get(0).getServerIp());
-//			System.out.println(serverLists.get(1).getServerIp());
 		}
 	}
 

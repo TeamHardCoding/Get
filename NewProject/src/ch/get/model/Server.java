@@ -55,6 +55,12 @@ public class Server implements Runnable {
 					procQuit(pw);
 					break;
 				}
+				
+				if(Thread.currentThread().isInterrupted()) {
+					System.out.println("shutdown");
+					procQuitFromServer(pw);
+					break;
+				}
 
 				String[] protocol = request.split(":");
 //				System.out.println(request);
@@ -67,31 +73,35 @@ public class Server implements Runnable {
 					procQuit(pw);
 				} else if (protocol[0].equals(Protocol.MSG.name())) {
 					procSendMsg(protocol[1]);
+				} else if(protocol[0].equals(Protocol.OPEN.name())) {
+					procOpenMsg(protocol[1]);
 				} else {
 					if (protocol[0].equals(Protocol.FILE.name())) {
-
+						
 					}
 				}
 			}
-		} catch (IOException e) {
-			printText(this.name + " 접속 종료");
-			e.printStackTrace();
+		} catch (IOException e) { // 클라쪽 접속 종료 일때 일로옴
+			System.out.println("ck");
+//			printText(this.name + " 접속 종료");
+//			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("ck");
+//			e.printStackTrace();
 		}
 	}
 
 	/* 서버 명령 */
-	public void procQuitFromServer() { // 서버 명령
-		PrintWriter pw;
-
+	public void procQuitFromServer(PrintWriter pw) { // 서버 명령
 		printText(endUserIp + ":" + "접속 끊김 - 서버 명령");
 
 		try {
-			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
-			pw.println("서버에서 접속을 종료 시켰습니다.\r\n");
+			pw.println(Protocol.QUIT.name());
+			pw.flush();
+			removeWriter(pw);
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
 
 		String data = this.name + "님이 퇴장했습니다.";
@@ -99,6 +109,12 @@ public class Server implements Runnable {
 	}
 
 	/* 클라 명령 */
+	private void procOpenMsg(String msg) {
+//		System.out.println(msg);
+		getPw().println(Protocol.OPEN.name());
+		getPw().flush();
+	}
+	
 	private void procSendMsg(String msg) {
 		printText(endUserIp + ":" + msg);
 		broadCaster(this.name + ":" + msg);

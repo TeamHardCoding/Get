@@ -86,10 +86,10 @@ public class MainApp extends Application {
 			stage.setResizable(false);
 			stage.setTitle("클라이언트 설정");
 			stage.initModality(Modality.WINDOW_MODAL);
-			stage.initOwner(primaryStage);
 			ClientInfoSettingController.inst.setMainApp(this);
 			ClientInfoSettingController.inst.setSettingStage(stage);
-
+			stage.initOwner(loginLayout.getScene().getWindow());
+			
 			stage.showAndWait();
 			return ClientInfoSettingController.inst.isOkClicked();
 		} catch (Exception e) {

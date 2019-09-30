@@ -51,7 +51,7 @@ public class RootLayoutController implements Initializable {
 
 			if (btType == ButtonType.OK) {
 				sh.handleCloseServer();
-				printText("서버 종료");
+//				printText("서버 종료");
 				sh = null;
 			}
 		}
