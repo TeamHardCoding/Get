@@ -30,12 +30,12 @@
    <bottom>
       <HBox BorderPane.alignment="CENTER">
          <children>
-            <TextField prefWidth="455.0" />
+            <TextField fx:id="userChatTextField" prefWidth="455.0" promptText="채팅 입력" />
             <Button mnemonicParsing="false" text="Send" />
          </children>
       </HBox>
    </bottom>
    <center>
-      <TextArea prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <TextArea fx:id="serverConsole" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

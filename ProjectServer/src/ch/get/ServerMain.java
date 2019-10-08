@@ -30,14 +30,14 @@ public class ServerMain extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader(ServerMain.class.getResource("view/ServerRootLayout.fxml"));
 			rootLayout = (BorderPane) loader.load();
-			
-			Scene scene = new Scene(rootLayout); //씬 생성
+
+			Scene scene = new Scene(rootLayout); // 씬 생성
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("ServerRoot");
 			primaryStage.setResizable(false);
 			primaryStage.show();
-			
-			ServerRootLayoutController.sevRootCont.setMainApp(this); //MainApp 접근을 위해 setting
+
+			ServerRootLayoutController.sevRootCont.setMainApp(this); // MainApp 접근을 위해 setting
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

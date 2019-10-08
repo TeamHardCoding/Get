@@ -15,12 +15,24 @@ public class ServerRootLayoutController implements Initializable {
 
 	private ServerMain mainApp;
 
-	@FXML private TextField userChatTextField;
-	@FXML private TextArea serverConsole;
-	
+	@FXML
+	private TextField userChatTextField;
+	@FXML
+	private TextArea serverConsole;
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		sevRootCont = this;
+
+//		ServerRootLayoutController.sevRootCont.printConsole("¾È³ç1");
+//		ServerRootLayoutController.sevRootCont.printConsole("¾È³ç2");
+	}
+
+	public void printConsole(String msg) {
+
+		if (msg != null) {
+			serverConsole.appendText(msg + "\n");
+		}
 	}
 
 	public ServerMain getMainApp() {
