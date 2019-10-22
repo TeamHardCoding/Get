@@ -1,14 +1,12 @@
 package ch.get.server;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
-
-import ch.get.model.ShowAlertType;
-import javafx.scene.control.Alert.AlertType;
 
 public class StartServer {
 
@@ -19,11 +17,16 @@ public class StartServer {
 	private int serverPORT = 8000;
 	
 	private ServerSocket serverSocket;
-c
 
 	public StartServer() {
-		serverSocket = new ServerSocket();
-		serverSocket.bind(new InetSocketAddress(, serverPORT));
+		
+		try {
+			serverSocket = new ServerSocket();
+			serverSocket.bind(new InetSocketAddress(serverIP, serverPORT));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public StartServer(String serverName) {
